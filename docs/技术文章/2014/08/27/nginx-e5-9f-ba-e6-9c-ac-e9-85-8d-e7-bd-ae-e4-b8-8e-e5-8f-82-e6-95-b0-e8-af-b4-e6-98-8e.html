@@ -1,75 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>nginx基本配置与优化参数说明 &mdash; Ebankie blog</title>
+    <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
+    <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="/assets/css/components/collection.css">
+    <link rel="stylesheet" href="/assets/css/components/repo-card.css">
+    <link rel="stylesheet" href="/assets/css/sections/repo-list.css">
+    <link rel="stylesheet" href="/assets/css/sections/mini-repo-list.css">
+    <link rel="stylesheet" href="/assets/css/components/boxed-group.css">
+    <link rel="stylesheet" href="/assets/css/globals/common.css">
+    <link rel="stylesheet" href="/assets/vendor/share.js/dist/css/share.min.css">
+    <link rel="stylesheet" href="/assets/css/globals/responsive.css">
+    <link rel="stylesheet" href="/assets/css/posts/index.css">
+    <!-- Latest compiled and minified CSS -->
+    
 
-  <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title>nginx基本配置与优化参数说明</title>
-  <meta name="description" content="转自：http://www.nginx.cn/76.html [well] #运行用户 user nobody; #启动进程,通常设置成和cpu的数量相等 优化设置为CPU2倍 worker_processes 1; #全局错误日志及PID文件 #error_log logs/error.log; #error_...">
-
-  <link rel="stylesheet" href="/blog/assets/main.css">
-  <link rel="canonical" href="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2014/08/27/nginx-e5-9f-ba-e6-9c-ac-e9-85-8d-e7-bd-ae-e4-b8-8e-e5-8f-82-e6-95-b0-e8-af-b4-e6-98-8e.html">
-  <link rel="alternate" type="application/rss+xml" title="Ebankie blog" href="/blog/feed.xml">
-  
-  
+    
+    <link rel="canonical" href="http://localhost:4000/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2014/08/27/nginx-e5-9f-ba-e6-9c-ac-e9-85-8d-e7-bd-ae-e4-b8-8e-e5-8f-82-e6-95-b0-e8-af-b4-e6-98-8e.html">
+    <link rel="alternate" type="application/atom+xml" title="Ebankie blog" href="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    
+    <meta property="og:title" content="nginx基本配置与优化参数说明">
+      
+    <meta name="keywords" content="">
+    <meta name="og:keywords" content="">
+      
+    <meta name="description" content="转自：http://www.nginx.cn/76.html    [well]#运行用户user nobody;#启动进程,通常设置成和cpu的数量相等 优化设置为CPU2倍worker_processes  1;#全局错误日志及PID文件#error_log  logs/error.log;#error_log  logs/error.log  notice;#error_log  logs/error.log  info;#pid        logs/nginx.pid;#工作模式及连接数上限events {    #epoll是多路复用IO(I/O Multiplexing)中的一种方式,    #仅用于linux2.6以上内核,可以大大提高nginx的性能    use   epoll;     #单个后台worker process进程的最大并发链接数    一般设置为几万以上。    worker_connections  1024;    # 并发总数是 worker_processes 和 worker_connections 的乘积    # 即 max_clients = worker_processes * worker_connections    # 在设置了反向代理的情况下，max_clients = worker_processes * worker_connections / 4  为什么    # 为什么上面反向代理要除以4，应该说是一个经验值    # 根据以上条件，正常情况下的Nginx Server可以应付的最大连接数为：4 * 8000 = 32000    # worker_connections 值的设置跟物理内存大小有关    # 因为并发受IO约束，max_clients的值须小于系统可以打开的最大文件数    # 而系统可以打开的最大文件数和内存大小成正比，一般1GB内存的机器上可以打开的文件数大约是10万左右    # 我们来看看360M内存的VPS可以打开的文件句柄数是多少：    # $ cat /proc/sys/fs/file-max    # 输出 34336    # 32000 &lt; 34336，即并发连接总数小于系统可以打开的文件句柄总数，这样就在操作系统可以承受的范围之内    # 所以，worker_connections 的值需根据 worker_processes 进程数目和系统可以打开的最大文件总数进行适当地进行设置    # 使得并发总数小于操作系统可以打开的最大文件数目    # 其实质也就是根据主机的物理CPU和内存进行配置    # 当然，理论上的并发总数可能会和实际有所偏差，因为主机还有其他的工作进程需要消耗系统资源。    # ulimit -SHn 65535}http {    #设定mime类型,类型由mime.type文件定义    include    mime.types;    default_type  application/octet-stream;    #设定日志格式    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '                      '$status $body_bytes_sent "$http_referer" '                      '"$http_user_agent" "$http_x_forwarded_for"';    access_log  logs/access.log  main;    #sendfile 指令指定 nginx 是否调用 sendfile 函数（zero copy 方式）来输出文件，    #对于普通应用，必须设为 on,    #如果用来进行下载等应用磁盘IO重负载应用，可设置为 off，    #以平衡磁盘与网络I/O处理速度，降低系统的uptime.    sendfile     on;    #tcp_nopush     on;    #连接超时时间    #keepalive_timeout  0;    keepalive_timeout  65;    tcp_nodelay     on;    #开启gzip压缩    gzip  on;    gzip_disable "MSIE [1-6].";    #设定请求缓冲    client_header_buffer_size    128k;    large_client_header_buffers  4 128k;    #设定虚拟主机配置    server {        #侦听80端口        listen    80;        #定义使用 www.nginx.cn访问        server_name  www.nginx.cn;">
+    <meta name="og:description" content="转自：http://www.nginx.cn/76.html    [well]#运行用户user nobody;#启动进程,通常设置成和cpu的数量相等 优化设置为CPU2倍worker_processes  1;#全局错误日志及PID文件#error_log  logs/error.log;#error_log  logs/error.log  notice;#error_log  logs/error.log  info;#pid        logs/nginx.pid;#工作模式及连接数上限events {    #epoll是多路复用IO(I/O Multiplexing)中的一种方式,    #仅用于linux2.6以上内核,可以大大提高nginx的性能    use   epoll;     #单个后台worker process进程的最大并发链接数    一般设置为几万以上。    worker_connections  1024;    # 并发总数是 worker_processes 和 worker_connections 的乘积    # 即 max_clients = worker_processes * worker_connections    # 在设置了反向代理的情况下，max_clients = worker_processes * worker_connections / 4  为什么    # 为什么上面反向代理要除以4，应该说是一个经验值    # 根据以上条件，正常情况下的Nginx Server可以应付的最大连接数为：4 * 8000 = 32000    # worker_connections 值的设置跟物理内存大小有关    # 因为并发受IO约束，max_clients的值须小于系统可以打开的最大文件数    # 而系统可以打开的最大文件数和内存大小成正比，一般1GB内存的机器上可以打开的文件数大约是10万左右    # 我们来看看360M内存的VPS可以打开的文件句柄数是多少：    # $ cat /proc/sys/fs/file-max    # 输出 34336    # 32000 &lt; 34336，即并发连接总数小于系统可以打开的文件句柄总数，这样就在操作系统可以承受的范围之内    # 所以，worker_connections 的值需根据 worker_processes 进程数目和系统可以打开的最大文件总数进行适当地进行设置    # 使得并发总数小于操作系统可以打开的最大文件数目    # 其实质也就是根据主机的物理CPU和内存进行配置    # 当然，理论上的并发总数可能会和实际有所偏差，因为主机还有其他的工作进程需要消耗系统资源。    # ulimit -SHn 65535}http {    #设定mime类型,类型由mime.type文件定义    include    mime.types;    default_type  application/octet-stream;    #设定日志格式    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '                      '$status $body_bytes_sent "$http_referer" '                      '"$http_user_agent" "$http_x_forwarded_for"';    access_log  logs/access.log  main;    #sendfile 指令指定 nginx 是否调用 sendfile 函数（zero copy 方式）来输出文件，    #对于普通应用，必须设为 on,    #如果用来进行下载等应用磁盘IO重负载应用，可设置为 off，    #以平衡磁盘与网络I/O处理速度，降低系统的uptime.    sendfile     on;    #tcp_nopush     on;    #连接超时时间    #keepalive_timeout  0;    keepalive_timeout  65;    tcp_nodelay     on;    #开启gzip压缩    gzip  on;    gzip_disable "MSIE [1-6].";    #设定请求缓冲    client_header_buffer_size    128k;    large_client_header_buffers  4 128k;    #设定虚拟主机配置    server {        #侦听80端口        listen    80;        #定义使用 www.nginx.cn访问        server_name  www.nginx.cn;">
+      
+    
+    
+        
+    
+    <meta property="og:url" content="http://localhost:4000/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2014/08/27/nginx-e5-9f-ba-e6-9c-ac-e9-85-8d-e7-bd-ae-e4-b8-8e-e5-8f-82-e6-95-b0-e8-af-b4-e6-98-8e.html">
+    <meta property="og:site_name" content="Ebankie blog">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN" />
+    
+    <meta property="article:published_time" content="2014-08-27">
+    
+    <script src="/assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="/assets/js/jquery-ui.js"></script>
+    <script type="text/javascript">
+    function toggleMenu() {
+        var nav = document.getElementsByClassName("site-header-nav")[0];
+        if (nav.style.display == "inline-flex") {
+          nav.style.display = "none";
+        } else {
+          nav.style.display = "inline-flex";
+        }
+    }
+    </script>
 </head>
+<body class="" data-mz="">
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="/" title="Ebankie blog"><span class="octicon octicon-mark-github"></span> Ebankie blog</a></h1>
+            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <nav class="site-header-nav" role="navigation">
+                
+            </nav>
+        </div>
+    </header>
+    <!-- / header -->
 
-
-  <body>
-
-    <header class="site-header" role="banner">
-
-  <div class="wrapper">
-
-    <a class="site-title" href="/blog/">Ebankie blog</a>
-
-    <nav class="site-nav">
-      <span class="menu-icon">
-        <svg viewBox="0 0 18 15" width="18px" height="15px">
-          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
-          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
-          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
-        </svg>
-      </span>
-
-      <div class="trigger">
-        
+    <section class="collection-head small geopattern" data-pattern-id="nginx基本配置与优化参数说">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">nginx基本配置与优化参数说明</h1>
+        <div class="collection-info">
           
-          <a class="page-link" href="/blog/about/">About</a>
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2014/08/27
+          </span>
           
-        
           
-          <a class="page-link" href="/blog/sample-page/">个人简介</a>
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="/categories/#技术文章" title="技术文章">技术文章</a>
+          </span>
           
-        
-          
-        
-          
-        
-          
-        
-          
-        
+        </div>
       </div>
-    </nav>
-
+    </div>
   </div>
-
-</header>
-
-
-    <main class="page-content" aria-label="Content">
-      <div class="wrapper">
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-
-  <header class="post-header">
-    <h1 class="post-title" itemprop="name headline">nginx基本配置与优化参数说明</h1>
-    <p class="post-meta"><time datetime="2014-08-27T16:26:12+08:00" itemprop="datePublished">Aug 27, 2014</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">ebankie</span></span></p>
-  </header>
-
-  <div class="post-content" itemprop="articleBody">
+</div>
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
     <p>转自：http://www.nginx.cn/76.html
     [well]</p>
 
@@ -218,65 +250,86 @@ location ~ /.ht { deny all; } } }
 </code></pre>
 </div>
 
-  </div>
-
-  
-</article>
-
-      </div>
-    </main>
-
-    <footer class="site-footer">
-
-  <div class="wrapper">
-
-    <h2 class="footer-heading">Ebankie blog</h2>
-
-    <div class="footer-col-wrapper">
-      <div class="footer-col footer-col-1">
-        <ul class="contact-list">
-          <li>
-            
-              Ebankie blog
-            
-            </li>
-            
-            <li><a href="mailto:your-email@domain.com">your-email@domain.com</a></li>
-            
-        </ul>
-      </div>
-
-      <div class="footer-col footer-col-2">
-        <ul class="social-media-list">
-          
-          <li>
-            <a href="https://github.com/jekyll"><span class="icon icon--github"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
-</span><span class="username">jekyll</span></a>
-
-          </li>
-          
-
-          
-          <li>
-            <a href="https://twitter.com/jekyllrb"><span class="icon icon--twitter"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/></svg>
-</span><span class="username">jekyllrb</span></a>
-
-          </li>
-          
-        </ul>
-      </div>
-
-      <div class="footer-col footer-col-3">
-        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
-</p>
-      </div>
+    </article>
+    <div class="share">
+      <div class="share-component"></div>
     </div>
+    <div class="comment">
+      
+  
+
+
+    </div>
+  </div>
+  <div class="column one-fourth">
+    
+<h3>Search</h3>
+<div id="site_search">
+    <input type="text" id="search_box" placeholder="Search">
+    <button class="btn btn-default" id="site_search_do"><span class="octicon octicon-search"></span></button>
+</div>
+
+<ul id="search_results"></ul>
+
+<link rel="stylesheet" type="text/css" href="/assets/css/modules/sidebar-search.css">
+<script src="/assets/js/lunr.min.js"></script>
+<script src="/assets/js/search.js"></script>
+
+
+    
+<h3>Post Directory</h3>
+<div id="post-directory-module" class="mobile-hidden">
+  <section class="post-directory">
+  <!-- Links that trigger the jumping -->
+  <!-- Added by javascript below -->
+  <dl></dl>
+  </section>
+</div>
+
+<script src="/assets/js/jquery.toc.js"></script>
 
   </div>
+</div>
+</section>
+<!-- /section.content -->
 
-</footer>
+    <footer class="container">
+        <div class="site-footer" role="contentinfo">
+            <div class="copyright left mobile-block">
+                    © 2015
+                    <span title=""></span>
+                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+            </div>
 
+            <ul class="site-footer-links right mobile-hidden">
+                <li>
+                    <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+                </li>
+            </ul>
+            <a href="" target="_blank" aria-label="view source code">
+                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+            </a>
+            <ul class="site-footer-links mobile-hidden">
+                
+                <li><a href=""><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+            </ul>
 
-  </body>
-
+        </div>
+    </footer>
+    <!-- / footer -->
+    <script src="/assets/vendor/share.js/dist/js/share.min.js"></script>
+    <script src="/assets/js/geopattern.js"></script>
+    <script src="/assets/js/prism.js"></script>
+    <link rel="stylesheet" href="/assets/css/globals/prism.css">
+    <script>
+      jQuery(document).ready(function($) {
+        // geopattern
+        $('.geopattern').each(function(){
+          $(this).geopattern($(this).data('pattern-id'));
+        });
+       // hljs.initHighlightingOnLoad();
+      });
+    </script>
+    
+</body>
 </html>
