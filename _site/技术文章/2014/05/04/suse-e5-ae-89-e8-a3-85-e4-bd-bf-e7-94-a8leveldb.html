@@ -1,0 +1,56 @@
+<p>一，安装步骤</p>
+
+<p>1,官网下载leveldb 我的是 leveldb-1.13.0  安装省。</p>
+
+<p>2,PHP下下载源码生成leveldb.so 配置php.ini 重起apache/nginx</p>
+
+<p>/ php-m 查看是否安装成功</p>
+
+<p>二，使用配置例子如下：</p>
+
+<p>[well]Well</p>
+
+<p>$options = array(
+‘create_if_missing’ =&gt; true, // if the specified database didn’t exist will create a new one
+‘error_if_exists’ =&gt; false, // if the opened database exsits will throw exception
+‘paranoid_checks’ =&gt; false,
+‘block_cache_size’ =&gt; 8 * (2 « 20),
+‘write_buffer_size’ =&gt; 4«20,
+‘block_size’ =&gt; 4096,
+‘max_open_files’ =&gt; 1000,
+‘block_restart_interval’ =&gt; 16,
+‘compression’ =&gt; LEVELDB_SNAPPY_COMPRESSION,
+‘comparator’ =&gt; NULL, // any callable parameter which returns 0, -1, 1
+);
+/* default readoptions */
+$readoptions = array(
+‘verify_check_sum’ =&gt; false,
+‘fill_cache’ =&gt; true,
+‘snapshot’ =&gt; null
+);</p>
+
+<p>/* default write options <em>/
+$writeoptions = array(
+‘sync’ =&gt; false
+);
+/</em></p>
+<ul>
+  <li>Basic operate methods: set(), get(), delete()
+*/
+//$db-&gt;put(“Key”, “Value is vale”);
+$db-&gt;set(“Key2”, “Value2”); // set() is an alias of put()
+var_dump($db-&gt;get(“Key”));
+$batch = new LevelDBWriteBatch();
+$batch-&gt;put(“key2”, “batch value”);
+$batch-&gt;put(“key3”, “batch value”);
+$batch-&gt;set(“key4”, “a bounch of values”); // set() is an alias of put()
+$batch-&gt;delete(“some key”);</li>
+</ul>
+
+<p>// Write once
+$db-&gt;write($batch);
+echo ‘<br />’;</p>
+
+<p>[/well]</p>
+
+<p>官方说每秒40W/S 吞吐量，稍后补充使用性能情况</p>

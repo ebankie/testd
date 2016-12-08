@@ -1,0 +1,152 @@
+---
+author: ebankie
+comments: true
+date: 2013-11-16 01:36:15+00:00
+layout: post
+link: http://www.ebankie.com/blog/?p=16
+slug: c%e6%89%a9%e5%b1%95php%e6%89%8b%e8%ae%b0%ef%bc%88%e4%ba%8c%ef%bc%89
+title: c++扩展PHP手记（二）
+wordpress_id: 16
+categories:
+- 技术文章
+tags:
+- c++
+- 扩展PHP，中高级应用
+---
+
+上一章已经写了个简单的C++扩展，这章开始写一个多文件的扩展包括面向对象的使用
+
+
+
+1，在上一章成功的基础上，在ext_bankie/下建一个hello.cpp hello.h文件用来编写C++方法
+
+然后编辑hello.h 内容如下：
+
+    
+    #ifndef _MYCLASS_H_                                                       
+      7 #define _MYCLASS_H_                                                       
+      8 #include <iostream>                                                       
+      9 using namespace std;                                                      
+     10 class classHello{
+     11         private: string dis;                                              
+     12 
+     13         public: classHello(string str);                                   
+     14         public:  ~classHello();                                           
+     15         int hello_add(int a,int b);                                       
+     16         string restr();                                        
+     17 };                                                                        
+     18 #endif
+
+
+保存退出
+
+2，编辑hello.cpp 内容如下：
+
+    
+     extern "C"{
+      8 #include "php.h"
+      9 #include "php_ini.h"
+     10 #include "ext/standard/info.h"
+     11 }
+     12 #include "hello.h"
+     13 classHello::classHello(string st){
+     14    dis = st;
+     15 }
+     16 classHello::~classHello(){
+     17 
+     18 }
+     19 
+     20 int classHello::hello_add(int a,int b){
+     21         return a+b;
+     22 }
+     23 
+     24 string classHello::restr(){
+     25         return dis;
+     26 }
+    ~
+
+
+保存退出，
+
+3，我们编辑完C++有关文件之后，要去config.m4里，把要用到的CPP文件注册到PHP_NEW_EXTENSION里，，如下所示：
+
+    
+         PHP_REQUIRE_CXX()
+     58  PHP_ARG_ENABLE(ext_bankie, whether to enable ext_bankie support,
+     59  Make sure that the comment is aligned:
+     60  [  --enable-ext_bankie           Enable ext_bankie support])
+     61 
+     62  PHP_ADD_LIBRARY(stdc++, ?.. EXTRA_LDFLAGS)
+     63   PHP_NEW_EXTENSION(ext_bankie, ext_bankie.cpp hello.cpp, $ext_shared)
+     64 fi
+
+
+4，在ext_bankie.cpp里要使用hello_add的方法，所以编辑ext_bankie.cpp如下：
+
+    
+    PHP_FUNCTION(helloadd){
+    201         long int a, b;
+    202         long int result;
+    203         char *test;
+    204         if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll", &a, &b) == FAILURE) {
+    205                 return;
+    206         }
+    207         classHello obj("this is test");
+    208         result= obj.hello_add(a,b);
+    209         RETURN_LONG(result);
+    210 }
+
+
+
+    
+    //要使用这个方法，要到php_ext_bankie.h 里注册一下，参考上一文章
+
+
+
+    
+    PHP_FUNCTION(reStr){
+    213         char *result ;
+    214         classHello obj("this is test");
+    215         sprintf(result,"%s",obj.restr().c_str());//这个地方要注意，直接是不能char * 到string 虽然用的c_str()也不可以，
+    216 
+    217     //  result=obj.restr();
+    218         RETURN_STRING(result,0);
+    219 }
+
+
+注207行是我们自己写的类方法，
+
+208行是ZEND返回值，可参考[http://blog.csdn.net/llj480028/article/details/7814436](http://blog.csdn.net/llj480028/article/details/7814436) 有详细说明
+
+4，然后执行 configure命令，重新生成ext_bankie.so ，如果还是有问题，重新使用phpize生成一下脚本文件
+
+5,测试，我的测试如下：
+
+    
+    <?php if (!extension_loaded("ext_bankie"))
+      5  @ini_set('display_errors', 1);
+      6  error_reporting(E_ALL ^ E_NOTICE);
+      7  dl('ext_bankie.so');
+      8     for ($i = 1; $i <= 3; $i++) {
+      9         print testFun("ThisIsUseless", $i);
+     10         print "\t\n";
+     11     }
+     12 print helloadd(10,10);
+     13 print $re; ?>
+
+
+结果22：
+
+    
+    ThisIsUseless	
+    ThisIsUselessThisIsUseless	
+    ThisIsUselessThisIsUselessThisIsUseless	
+    20
+
+
+
+    
+    ext_bankie extension is available
+
+
+如有不清楚步骤参考上一章：[http://blog.csdn.net/llj480028/article/details/7802398](http://blog.csdn.net/llj480028/article/details/7802398)

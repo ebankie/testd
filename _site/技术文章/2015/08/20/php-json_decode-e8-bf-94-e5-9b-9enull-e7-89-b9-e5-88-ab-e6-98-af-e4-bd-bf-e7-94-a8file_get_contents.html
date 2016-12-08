@@ -1,0 +1,8 @@
+<p>今天遇到了json_decode无法解析json的情况，很是头痛，查来查去原来 编码服务器可以正常解析，但是解码服务无法解析，等到把整个json字串 放到页面上查看元素突然发现json字串头部多了字串，考虑是BOM问题，然后在编码服务打印字串长度6617到了解码服务打印长度成了6620 还要多一点，因些断定是BOM引起的json_decode无法解析。</p>
+
+<p>if(preg_match(‘/^\xEF\xBB\xBF/’,$receive_part))
+{
+$receive_part= substr($receive_part,3);
+}</p>
+
+<p>去掉BOM 解析正常,原来形成应该是编码服务使用header(‘Content-Type:application/json; charset=utf-8’);转UTF－8时形成的BOM 。</p>

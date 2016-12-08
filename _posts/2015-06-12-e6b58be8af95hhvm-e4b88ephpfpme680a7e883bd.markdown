@@ -1,0 +1,143 @@
+---
+author: ebankie
+comments: true
+date: 2015-06-12 08:01:23+00:00
+layout: post
+link: http://www.ebankie.com/blog/?p=225
+slug: '%e6%b5%8b%e8%af%95hhvm-%e4%b8%8ephpfpm%e6%80%a7%e8%83%bd'
+title: 测试hhvm 与phpfpm性能
+wordpress_id: 225
+categories:
+- 技术文章
+---
+
+总是说hhvm性能很高亲测试数据如下：
+
+
+
+从cpu\mem\io 三个方面
+
+服务器：
+
+cpu 8核 3.30GHz
+
+mem 16G
+
+disk 500G
+
+一、time 测试：
+
+网上的例子CUP
+
+test.php
+
+    
+    <?php
+    function fib($n)
+    {
+        if ($n <= 2)
+            return 1;
+        else
+            return fib($n-1) + fib($n-2);
+    }
+    
+    $n = 36;
+    printf("fib(%d) = %d\n", $n, fib($n, 2));
+    ?>
+    root#time hhvm test.php
+
+
+real 0m0.407s
+user 0m0.336s
+sys 0m0.068s
+
+
+
+root #time php test.php
+
+real 0m1.046s
+user 0m0.952s
+sys 0m0.092s
+
+
+
+内存及IO 也相差类似
+
+
+
+    
+    二、ab测试
+    ab -c1000 -n500 http://xxx.xxx.com/test.php
+    分别在hhvm php-fpm下
+
+
+php-fpm:数据：
+
+Server Port: 80
+
+Document Path: /test.php
+Document Length: 0 bytes
+
+Concurrency Level: 500
+Time taken for tests: 40.838 seconds
+Complete requests: 1000
+Failed requests: 0
+Write errors: 0
+Total transferred: 159000 bytes
+HTML transferred: 0 bytes
+Requests per second: 24.49 [#/sec] (mean)
+Time per request: 20419.000 [ms] (mean)
+Time per request: 40.838 [ms] (mean, across all concurrent reque
+Transfer rate: 3.80 [Kbytes/sec] received
+
+Connection Times (ms)
+min mean[+/-sd] median max
+Connect: 40 41 0.5 41 43
+Processing: 52 15287 6568.0 20288 20420
+Waiting: 52 10177 5887.2 10185 20417
+Total: 92 15328 6567.9 20328 20461
+
+hhvm:
+
+Document Path: /test.php
+Document Length: 0 bytes
+
+Concurrency Level: 500
+Time taken for tests: 40.834 seconds
+Complete requests: 1000
+Failed requests: 0
+Write errors: 0
+Total transferred: 197000 bytes
+HTML transferred: 0 bytes
+Requests per second: 24.49 [#/sec] (mean)
+Time per request: 20417.000 [ms] (mean)
+Time per request: 40.834 [ms] (mean, across all concurrent reques
+Transfer rate: 4.71 [Kbytes/sec] received
+
+Connection Times (ms)
+min mean[+/-sd] median max
+Connect: 40 41 0.5 41 42
+Processing: 44 15287 6567.5 20297 20414
+Waiting: 44 10199 5887.7 10216 20409
+Total: 85 15328 6567.4 20338 20454
+
+
+
+
+
+
+
+    
+    经测试qps相差不多，基本一样（很是奇怪）但是 HHVM在c1000 n1000时，确实抗住了，但是php-fpm在同环境下，机器死掉
+    
+    再看负载：
+    php-fpm
+    load average: 0.22, 0.08, 0.03
+    hhvm
+
+
+
+    
+    load average: 0.12, 0.08, 0.03
+    
+    总体来看 hhvm性能是优于fpm的
