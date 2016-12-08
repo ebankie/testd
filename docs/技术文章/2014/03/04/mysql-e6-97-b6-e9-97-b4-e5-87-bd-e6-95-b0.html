@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>mysql 时间函数</title>
+  <meta name="description" content="[well]">
+
+  <link rel="stylesheet" href="/blog/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2014/03/04/mysql-e6-97-b6-e9-97-b4-e5-87-bd-e6-95-b0.html">
+  <link rel="alternate" type="application/rss+xml" title="Ebankie blog" href="/blog/feed.xml">
+  
+  
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/blog/">Ebankie blog</a>
+
+    <nav class="site-nav">
+      <span class="menu-icon">
+        <svg viewBox="0 0 18 15" width="18px" height="15px">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </span>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/blog/about/">About</a>
+          
+        
+          
+          <a class="page-link" href="/blog/sample-page/">个人简介</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">mysql 时间函数</h1>
+    <p class="post-meta"><time datetime="2014-03-04T11:08:30+08:00" itemprop="datePublished">Mar 4, 2014</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">ebankie</span></span></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>[well]</p>
+
+<p>在工作中遇到sql语句时间对比问题，查了好多时间函数，正好总结一下：</p>
+
+<p>1,　ADDDAYE (expr,days) <em>expr</em>, <em>days为整数值DATE_ADD()为相同功能函数，ADDTIME(<strong>expr_,_expr2</strong>)为增加 h,i,s</em></p>
+
+<p><strong>SELECT ADDDATE(‘1998-01-02’, 31);</strong></p>
+
+<p>-&gt; ‘1998-02-02’</p>
+
+<p>2,CURDATE() 返回当前日期　具体格式根据函数用在字符串或是数字语境中而定</p>
+
+<p>mysql&gt; <strong>SELECT CURDATE();</strong></p>
+
+<p>-&gt; ‘1997-12-15’</p>
+
+<p>mysql&gt; <strong>SELECT CURDATE() + 0;</strong></p>
+
+<p>-&gt; 19971215</p>
+
+<p>3,CURTIME() 　将当前时间以’HH:MM:SS’或 HHMMSS 的格式返回， 具体格式根据函数用在字符串或是数字语境中而定</p>
+
+<p>4，DATE(<em>expr</em>)</p>
+
+<p>提取日期或时间日期表达式_expr_中的日期部分。</p>
+
+<p>mysql&gt; <strong>SELECT DATE(‘2003-12-31 01:02:03’);</strong></p>
+
+<p>-&gt; ‘2003-12-31’</p>
+
+<p>5，DATEDIFF(<em>expr</em>,<em>expr2</em>)</p>
+
+<p>DATEDIFF() 返回起始时间 <em>expr_和结束时间_expr2_之间的天数。_Expr_和_expr2</em> 为日期或 date-and-time 表达式。计算中只用到这些值的日期部分。</p>
+
+<p>mysql&gt; <strong>SELECT DATEDIFF(‘1997-12-31 23:59:59’,’1997-12-30’);</strong></p>
+
+<p>-&gt; 1</p>
+
+<p>mysql&gt; <strong>SELECT DATEDIFF(‘1997-11-30 23:59:59’,’1997-12-31’);</strong></p>
+
+<p>-&gt; -31</p>
+
+<p>6，DATE_FORMAT(<em>date</em>,<em>format</em>) 根据_format_ 字符串安排_date_ 值的格式。</p>
+
+<p>但是传字段参数时不是很好用，特别是_int类型转换成null，而from_unixtime是OK的_</p>
+
+<p>以下说明符可用在 <em>format</em> 字符串中：</p>
+<table cellpadding="0" width="531" border="1">
+<tbody>
+<tr>
+
+<td width="59">**说明符**
+</td>
+
+<td>**说明**
+</td>
+</tr>
+<tr>
+
+<td width="59">%a
+</td>
+
+<td>工作日的缩写名称  (Sun..Sat)
+</td>
+</tr>
+<tr>
+
+<td width="59">%b
+</td>
+
+<td>月份的缩写名称  (Jan..Dec)
+</td>
+</tr>
+<tr>
+
+<td width="59">%c
+</td>
+
+<td>月份，数字形式(0..12)
+</td>
+</tr>
+<tr>
+
+<td width="59">%D
+</td>
+
+<td>带有英语后缀的该月日期  (0th, 1st, 2nd, 3rd, ...)
+</td>
+</tr>
+<tr>
+
+<td width="59">%d
+</td>
+
+<td>该月日期, 数字形式 (00..31)
+</td>
+</tr>
+<tr>
+
+<td width="59">%e
+</td>
+
+<td>该月日期, 数字形式(0..31)
+</td>
+</tr>
+<tr>
+
+<td width="59">%f
+</td>
+
+<td>微秒 (000000..999999)
+</td>
+</tr>
+<tr>
+
+<td width="59">%H
+</td>
+
+<td>小时(00..23)
+</td>
+</tr>
+<tr>
+
+<td width="59">%h
+</td>
+
+<td>小时(01..12)
+</td>
+</tr>
+<tr>
+
+<td width="59">%I
+</td>
+
+<td>小时 (01..12)
+</td>
+</tr>
+<tr>
+
+<td width="59">%i
+</td>
+
+<td>分钟,数字形式 (00..59)
+</td>
+</tr>
+<tr>
+
+<td width="59">%j
+</td>
+
+<td>一年中的天数 (001..366)
+</td>
+</tr>
+<tr>
+
+<td width="59">%k
+</td>
+
+<td>小时 (0..23)
+</td>
+</tr>
+<tr>
+
+<td width="59">%l
+</td>
+
+<td>小时 (1..12)
+</td>
+</tr>
+<tr>
+
+<td width="59">%M
+</td>
+
+<td>月份名称 (January..December)
+</td>
+</tr>
+<tr>
+
+<td width="59">%m
+</td>
+
+<td>月份, 数字形式 (00..12)
+</td>
+</tr>
+<tr>
+
+<td width="59">%p
+</td>
+
+<td>上午（AM）或下午（ PM）
+</td>
+</tr>
+<tr>
+
+<td width="59">%r
+</td>
+
+<td>时间 , 12小时制 (小时hh:分钟mm:秒数ss 后加 AM或PM)
+</td>
+</tr>
+<tr>
+
+<td width="59">%S
+</td>
+
+<td>秒 (00..59)
+</td>
+</tr>
+<tr>
+
+<td width="59">%s
+</td>
+
+<td>秒 (00..59)
+</td>
+</tr>
+<tr>
+
+<td width="59">%T
+</td>
+
+<td>时间 , 24小时制 (小时hh:分钟mm:秒数ss)
+</td>
+</tr>
+<tr>
+
+<td width="59">%U
+</td>
+
+<td>周 (00..53), 其中周日为每周的第一天
+</td>
+</tr>
+<tr>
+
+<td width="59">%u
+</td>
+
+<td>周 (00..53), 其中周一为每周的第一天
+</td>
+</tr>
+<tr>
+
+<td width="59">%V
+</td>
+
+<td>周 (01..53), 其中周日为每周的第一天 ; 和 %X同时使用
+</td>
+</tr>
+<tr>
+
+<td width="59">%v
+</td>
+
+<td>周 (01..53), 其中周一为每周的第一天 ; 和 %x同时使用
+</td>
+</tr>
+<tr>
+
+<td width="59">%W
+</td>
+
+<td>工作日名称 (周日..周六)
+</td>
+</tr>
+<tr>
+
+<td width="59">%w
+</td>
+
+<td>一周中的每日 (0=周日..6=周六)
+</td>
+</tr>
+<tr>
+
+<td width="59">%X
+</td>
+
+<td>该周的年份，其中周日为每周的第一天, 数字形式,4位数;和%V同时使用
+</td>
+</tr>
+<tr>
+
+<td width="59">%x
+</td>
+
+<td>该周的年份，其中周一为每周的第一天, 数字形式,4位数;和%v同时使用
+</td>
+</tr>
+<tr>
+
+<td width="59">%Y
+</td>
+
+<td>年份, 数字形式,4位数
+</td>
+</tr>
+<tr>
+
+<td width="59">%y
+</td>
+
+<td>年份, 数字形式 (2位数)
+</td>
+</tr>
+<tr>
+
+<td width="59">%%
+</td>
+
+<td>‘%’文字字符
+</td>
+</tr>
+</tbody>
+</table>
+<p>所有其它字符都被复制到结果中，无需作出解释。</p>
+
+<p>注意， ‘%’字符要求在格式指定符之前。</p>
+
+<p>月份和日期说明符的范围从零开始，原因是 MySQL允许存储诸如 ‘2004-00-00’的不完全日期.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mysql&gt; &lt;b&gt;SELECT DATE_FORMAT('1997-10-04 22:23:00', '%W %M %Y');&lt;/b&gt;
+
+
+
+
+        -&gt; 'Saturday October 1997'
+7,
+&lt;ul&gt;
+	&lt;li style="display: inline !important;"&gt;DAY(&lt;i&gt;date&lt;/i&gt;)返回&lt;i&gt;date&lt;/i&gt; 对应的工作日名称&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+</div>
+
+<p><strong>SELECT DAYNAME(‘1998-02-05’);</strong></p>
+
+<p>-&gt; ‘周四’</p>
+
+<p>8，DAYOFMONTH(<em>date</em>)  返回_date_ 对应的该月日期，范围是从 1到31。既提取相应 哪天</p>
+
+<p>9,DAYOFWEEK(date）同上返回工作日期 (1 = 周日, 2 = 周一, …, 7 = 周六)对应的工作日索引</p>
+
+<p>10，DAYOFYEAR(<em>date</em>)返回_date_ 对应的一年中的天数，范围是从 1到366。</p>
+
+<p>mysql&gt; <strong>SELECT DAYOFYEAR(‘1998-02-03’);</strong></p>
+
+<p>-&gt; 34</p>
+
+<p>11，FROM_UNIXTIME(<em>unix_timestamp</em>) , FROM_UNIXTIME(<em>unix_timestamp</em>,<em>format</em>)</p>
+
+<p>返回’YYYY-MM-DD HH:MM:SS’或YYYYMMDDHHMMSS 格式值的_unix_timestamp_参数表示，具体格式取决于该函数是否用在字符串中或是数字语境中。</p>
+
+<p>若_format_ 已经给出，则结果的格式是根据_format_ 字符串而定。 <em>format</em> 可以包含同DATE_FORMAT() 函数输入项列表中相同的说明符。</p>
+
+<p>mysql&gt; <strong>SELECT FROM_UNIXTIME(875996580);</strong></p>
+
+<p>-&gt; ‘1997-10-04 22:23:00’</p>
+
+<p>mysql&gt; <strong>SELECT FROM_UNIXTIME(875996580) + 0;</strong></p>
+
+<p>-&gt; 19971004222300</p>
+
+<p>mysql&gt; <strong>SELECT FROM_UNIXTIME(UNIX_TIMESTAMP(),</strong></p>
+
+<p>-&gt;                      <strong>‘%Y %D %M %h:%i:%s %x’);</strong></p>
+
+<p>-&gt; ‘2003 6th August 06:22:58 2003’</p>
+
+<p>[/well]</p>
+
+<p>[well]</p>
+
+<p>常用日期函数 例如时间比较：data_add ().datediff(),data_sub().,时间格式化函数，date_format(),from_unixtime()</p>
+
+<p>[/well]</p>
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Ebankie blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>
+            
+              Ebankie blog
+            
+            </li>
+            
+            <li><a href="mailto:your-email@domain.com">your-email@domain.com</a></li>
+            
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/jekyll"><span class="icon icon--github"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">jekyll</span></a>
+
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/jekyllrb"><span class="icon icon--twitter"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/></svg>
+</span><span class="username">jekyllrb</span></a>
+
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

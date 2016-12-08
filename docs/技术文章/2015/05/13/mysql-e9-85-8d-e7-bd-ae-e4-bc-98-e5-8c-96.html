@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>mysql 配置优化</title>
+  <meta name="description" content="**感觉这篇文章比较靠谱 收藏，经常会说优化 ，基本从三个方面，配置优化、设计优化、使用优化。这个文章从配置 方面来说不错 **">
+
+  <link rel="stylesheet" href="/blog/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/05/13/mysql-e9-85-8d-e7-bd-ae-e4-bc-98-e5-8c-96.html">
+  <link rel="alternate" type="application/rss+xml" title="Ebankie blog" href="/blog/feed.xml">
+  
+  
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/blog/">Ebankie blog</a>
+
+    <nav class="site-nav">
+      <span class="menu-icon">
+        <svg viewBox="0 0 18 15" width="18px" height="15px">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </span>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/blog/about/">About</a>
+          
+        
+          
+          <a class="page-link" href="/blog/sample-page/">个人简介</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">mysql 配置优化</h1>
+    <p class="post-meta"><time datetime="2015-05-13T15:52:15+08:00" itemprop="datePublished">May 13, 2015</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">ebankie</span></span></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>**感觉这篇文章比较靠谱 收藏，经常会说优化 ，基本从三个方面，配置优化、设计优化、使用优化。这个文章从配置 方面来说不错
+**</p>
+
+<p>转自：http://www.itokit.com/2013/0412/74892.html</p>
+
+<p>定运行了一段时间后运行，根据服务器的“状态”进行优化。
+mysql&gt; show global status;
+可以列出MySQL服务器运行各种状态值，我个人较喜欢的用法是show status like ‘查询值%’;
+一、慢查询
+mysql&gt; show variables like ‘%slow%’;
++——————+——-+
+| Variable_name | Value |
++——————+——-+
+| log_slow_queries | ON |
+| slow_launch_time | 2     |
++——————+——-+
+mysql&gt; show global status like ‘%slow%’;
++———————+——-+
+| Variable_name    | Value |
++———————+——-+
+| Slow_launch_threads | 0     |
+| Slow_queries        | 4148 |
++———————+——-+
+打开慢查询日志可能会对系统性能有一点点影响，如果你的MySQL是主－从结构，可以考虑打开其中一台从服务器的慢查询日志，这样既可以监控慢查询，对系统性能影响又小，另mysql有自带的命令mysqldumpslow可进行查询，例下列命令可以查出访问次数最多的20个sql语句mysqldumpslow -s c -t 20 host-slow.log</p>
+
+<p>二、连接数
+经常会遇见”MySQL: ERROR 1040: Too manyconnections”的情况，一种是访问量确实很高，MySQL服务器抗不住，这个时候就要考虑增加从服务器分散读压力，另外一种情况是MySQL配置文件中max_connections值过小：
+mysql&gt; show variables like ‘max_connections’;
++—————–+——-+
+| Variable_name | Value |
++—————–+——-+
+| max_connections | 256 |
++—————–+——-+
+这台MySQL服务器最大连接数是256，然后查询一下服务器响应的最大连接数：
+mysql&gt; show global status like ‘Max_used_connections’;
++———————-+——-+
+| Variable_name        | Value |
++———————-+——-+
+| Max_used_connections | 245 |
++———————-+——-+
+MySQL服务器过去的最大连接数是245，没有达到服务器连接数上限256，应该没有出现1040错误，比较理想的设置是：
+Max_used_connections / max_connections   * 100% ≈ 85%
+最大连接数占上限连接数的85％左右，如果发现比例在10%以下，MySQL服务器连接数上限设置的过高了。</p>
+
+<p>三、Key_buffer_size
+key_buffer_size是对MyISAM表性能影响最大的一个参数，下面一台以MyISAM为主要存储引擎服务器的配置：
+mysql&gt; show variables like ‘key_buffer_size’;
++—————–+————+
+| Variable_name | Value    |
++—————–+————+
+| key_buffer_size | 536870912 |
++—————–+————+
+分配了512MB内存给key_buffer_size，我们再看一下key_buffer_size的使用情况：
+mysql&gt; show global status like ‘key_read%’;
++————————+————-+
+| Variable_name       | Value    |
++————————+————-+
+| Key_read_requests    | 27813678764 |
+| Key_reads              | 6798830     |
++————————+————-+
+一共有27813678764个索引读取请求，有6798830个请求在内存中没有找到直接从硬盘读取索引，计算索引未命中缓存的概率：
+key_cache_miss_rate ＝ Key_reads / Key_read_requests * 100%
+比如上面的数据，key_cache_miss_rate为0.0244%，4000个索引读取请求才有一个直接读硬盘，已经很BT 了，key_cache_miss_rate在0.1%以下都很好（每1000个请求有一个直接读硬盘），如果key_cache_miss_rate在 0.01%以下的话，key_buffer_size分配的过多，可以适当减少。
+MySQL服务器还提供了key_blocks_*参数：
+mysql&gt; show global status like ‘key_blocks_u%’;
++————————+————-+
+| Variable_name       | Value    |
++————————+————-+
+| Key_blocks_unused    | 0           |
+| Key_blocks_used        | 413543    |
++————————+————-+
+Key_blocks_unused 表示未使用的缓存簇(blocks)数，Key_blocks_used表示曾经用到的最大的blocks数，比如这台服务器，所有的缓存都用到了，要么 增加key_buffer_size，要么就是过渡索引了，把缓存占满了。比较理想的设置：Key_blocks_used / (Key_blocks_unused + Key_blocks_used) * 100% ≈ 80%
+四、临时表
+mysql&gt; show global status like ‘created_tmp%’;
++————————-+———+
+| Variable_name           | Value |
++————————-+———+
+| Created_tmp_disk_tables | 21197 |
+| Created_tmp_files    | 58    |
+| Created_tmp_tables    | 1771587 |
++————————-+———+
+每次创建临时表，Created_tmp_tables增加，如果是在磁盘上创建临时表，Created_tmp_disk_tables也增加,Created_tmp_files表示MySQL服务创建的临时文件文件数，比较理想的配置是：
+Created_tmp_disk_tables / Created_tmp_tables * 100% &lt;= 25%
+比如上面的服务器Created_tmp_disk_tables / Created_tmp_tables * 100% ＝ 1.20%，应该相当好了。我们再看一下MySQL服务器对临时表的配置：
+mysql&gt; show variables where Variable_name in (‘tmp_table_size’, ‘max_heap_table_size’);
++———————+———–+
+| Variable_name    | Value     |
++———————+———–+
+| max_heap_table_size | 268435456 |
+| tmp_table_size    | 536870912 |
++———————+———–+
+只有256MB以下的临时表才能全部放内存，超过的就会用到硬盘临时表。</p>
+
+<p>五、Open Table情况
+mysql&gt; show global status like ‘open%tables%’;
++—————+——-+
+| Variable_name | Value |
++—————+——-+
+| Open_tables | 919 |
+| Opened_tables | 1951   |
++—————+——-+
+Open_tables 表示打开表的数量，Opened_tables表示打开过的表数量，如果Opened_tables数量过大，说明配置中 table_cache(5.1.3之后这个值叫做table_open_cache)值可能太小，我们查询一下服务器table_cache值：
+mysql&gt; show variables like ‘table_cache’;
++—————+——-+
+| Variable_name | Value |
++—————+——-+
+| table_cache | 2048   |</p>
+
+<p>+—————+——-+
+比较合适的值为：
+Open_tables / Opened_tables   * 100% &gt;= 85%
+Open_tables / table_cache * 100% &lt;= 95%</p>
+
+<p>六、进程使用情况
+mysql&gt; show global status like ‘Thread%’;
++——————-+——-+
+| Variable_name     | Value |
++——————-+——-+
+| Threads_cached | 46 |
+| Threads_connected | 2     |
+| Threads_created | 570 |
+| Threads_running | 1     |
++——————-+——-+
+如果我们在MySQL服务器配置文件中设置了thread_cache_size，当客户端断开之后，服务器处理此客户的线程将会缓存起来以响应下一个客户 而不是销毁（前提是缓存数未达上限）。Threads_created表示创建过的线程数，如果发现Threads_created值过大的话，表明 MySQL服务器一直在创建线程，这也是比较耗资源，可以适当增加配置文件中thread_cache_size值，查询服务器 thread_cache_size配置：
+mysql&gt; show variables like ‘thread_cache_size’;
++——————-+——-+
+| Variable_name     | Value |
++——————-+——-+
+| thread_cache_size | 64 |
++——————-+——-+
+示例中的服务器还是挺健康的。</p>
+
+<p>七、查询缓存(query cache)
+mysql&gt; show global status like ‘qcache%’;
++————————-+———–+
+| Variable_name           | Value     |
++————————-+———–+
+| Qcache_free_blocks    | 22756     |
+| Qcache_free_memory    | 76764704   |
+| Qcache_hits          | 213028692 |
+| Qcache_inserts       | 208894227 |
+| Qcache_lowmem_prunes | 4010916 |
+| Qcache_not_cached    | 13385031   |
+| Qcache_queries_in_cache | 43560     |
+| Qcache_total_blocks     | 111212 |
++————————-+———–+
+MySQL查询缓存变量解释：
+Qcache_free_blocks：缓存中相邻内存块的个数。数目大说明可能有碎片。FLUSH QUERY CACHE会对缓存中的碎片进行整理，从而得到一个空闲块。
+Qcache_free_memory：缓存中的空闲内存。
+Qcache_hits：每次查询在缓存中命中时就增大
+Qcache_inserts：每次插入一个查询时就增大。命中次数除以插入次数就是不中比率。
+Qcache_lowmem_prunes： 缓存出现内存不足并且必须要进行清理以便为更多查询提供空间的次数。这个数字最好长时间来看；如果这个数字在不断增长，就表示可能碎片非常严重，或者内存 很少。（上面的 free_blocks和free_memory可以告诉您属于哪种情况）
+Qcache_not_cached：不适合进行缓存的查询的数量，通常是由于这些查询不是 SELECT 语句或者用了now()之类的函数。
+Qcache_queries_in_cache：当前缓存的查询（和响应）的数量。
+Qcache_total_blocks：缓存中块的数量。</p>
+
+<p>我们再查询一下服务器关于query_cache的配置：
+mysql&gt; show variables like ‘query_cache%’;
++——————————+———–+
+| Variable_name             | Value     |
++——————————+———–+
+| query_cache_limit          | 2097152 |
+| query_cache_min_res_unit     | 4096    |
+| query_cache_size          | 203423744 |
+| query_cache_type          | ON        |
+| query_cache_wlock_invalidate | OFF    |
++——————————+———–+
+各字段的解释：
+query_cache_limit：超过此大小的查询将不缓存
+query_cache_min_res_unit：缓存块的最小大小
+query_cache_size：查询缓存大小
+query_cache_type：缓存类型，决定缓存什么样的查询，示例中表示不缓存 select sql_no_cache 查询
+query_cache_wlock_invalidate：当有其他客户端正在对MyISAM表进行写操作时，如果查询在query cache中，是否返回cache结果还是等写操作完成再读表获取结果。
+query_cache_min_res_unit的配置是一柄”双刃剑”，默认是4KB，设置值大对大数据查询有好处，但如果你的查询都是小数据查询，就容易造成内存碎片和浪费。
+查询缓存碎片率 = Qcache_free_blocks / Qcache_total_blocks * 100%
+如果查询缓存碎片率超过20%，可以用FLUSH QUERY CACHE整理缓存碎片，或者试试减小query_cache_min_res_unit，如果你的查询都是小数据量的话。
+查询缓存利用率 = (query_cache_size - Qcache_free_memory) / query_cache_size * 100%
+查询缓存利用率在25%以下的话说明query_cache_size设置的过大，可适当减小；查询缓存利用率在80％以上而且Qcache_lowmem_prunes &gt; 50的话说明query_cache_size可能有点小，要不就是碎片太多。
+查询缓存命中率 = (Qcache_hits - Qcache_inserts) / Qcache_hits * 100%
+示例服务器 查询缓存碎片率 ＝ 20.46％，查询缓存利用率 ＝ 62.26％，查询缓存命中率 ＝ 1.94％，命中率很差，可能写操作比较频繁吧，而且可能有些碎片。</p>
+
+<p>八、排序使用情况
+mysql&gt; show global status like ‘sort%’;
++——————-+————+
+| Variable_name     | Value    |
++——————-+————+
+| Sort_merge_passes | 29       |
+| Sort_range        | 37432840 |
+| Sort_rows       | 9178691532 |
+| Sort_scan       | 1860569 |
++——————-+————+
+Sort_merge_passes 包括两步。MySQL 首先会尝试在内存中做排序，使用的内存大小由系统变量Sort_buffer_size 决定，如果它的大小不够把所有的记录都读到内存中，MySQL 就会把每次在内存中排序的结果存到临时文件中，等MySQL 找到所有记录之后，再把临时文件中的记录做一次排序。这再次排序就会增加 Sort_merge_passes。实际上，MySQL会用另一个临时文件来存再次排序的结果，所以通常会看到 Sort_merge_passes增加的数值是建临时文件数的两倍。因为用到了临时文件，所以速度可能会比较慢，增加 Sort_buffer_size 会减少Sort_merge_passes 和 创建临时文件的次数，但盲目的增加Sort_buffer_size 并不一定能提高速度</p>
+
+<p>九、文件打开数(open_files)
+mysql&gt; show global status like ‘open_files’;
++—————+——-+
+| Variable_name | Value |
++—————+——-+
+| Open_files | 1410   |
++—————+——-+
+mysql&gt; show variables like ‘open_files_limit’;
++——————+——-+
+| Variable_name | Value |
++——————+——-+
+| open_files_limit | 4590   |
++——————+——-+
+比较合适的设置：Open_files / open_files_limit * 100% &lt;= 75％</p>
+
+<p>十、表锁情况
+mysql&gt; show global status like ‘table_locks%’;
++———————–+———–+
+| Variable_name       | Value     |
++———————–+———–+
+| Table_locks_immediate | 490206328 |
+| Table_locks_waited | 2084912 |
++———————–+———–+
+Table_locks_immediate 表示立即释放表锁数，Table_locks_waited表示需要等待的表锁数，如果Table_locks_immediate / Table_locks_waited &gt;5000，最好采用InnoDB引擎，因为InnoDB是行锁而MyISAM是表锁，对于高并发写入的应用InnoDB效果会好些。示例中的服务 器Table_locks_immediate / Table_locks_waited ＝ 235，MyISAM就足够了。</p>
+
+<p>十一、表扫描情况
+mysql&gt; show global status like ‘handler_read%’;
++———————–+————-+
+| Variable_name       | Value    |
++———————–+————-+
+| Handler_read_first | 5803750     |
+| Handler_read_key    | 6049319850   |
+| Handler_read_next     | 94440908210 |
+| Handler_read_prev     | 34822001724 |
+| Handler_read_rnd    | 405482605 |
+| Handler_read_rnd_next | 18912877839 |
++———————–+————-+
+mysql&gt; show global status like ‘com_select’;
++—————+———–+
+| Variable_name | Value     |
++—————+———–+
+| Com_select | 222693559 |
++—————+———–+
+计算表扫描率：
+表扫描率 ＝ Handler_read_rnd_next / Com_select
+如果表扫描率超过4000，说明进行了太多表扫描，很有可能索引没有建好，增加read_buffer_size值会有一些好处，但最好不要超过8MB。</p>
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Ebankie blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>
+            
+              Ebankie blog
+            
+            </li>
+            
+            <li><a href="mailto:your-email@domain.com">your-email@domain.com</a></li>
+            
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/jekyll"><span class="icon icon--github"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">jekyll</span></a>
+
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/jekyllrb"><span class="icon icon--twitter"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/></svg>
+</span><span class="username">jekyllrb</span></a>
+
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

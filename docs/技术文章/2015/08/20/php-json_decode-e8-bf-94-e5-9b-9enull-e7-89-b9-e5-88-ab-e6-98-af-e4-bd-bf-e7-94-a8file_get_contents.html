@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>About</title>
-  <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search resu...">
+  <title>php json_decode返回NULL 特别是使用file_get_contents</title>
+  <meta name="description" content="今天遇到了json_decode无法解析json的情况，很是头痛，查来查去原来 编码服务器可以正常解析，但是解码服务无法解析，等到把整个json字串 放到页面上查看元素突然发现json字串头部多了字串，考虑是BOM问题，然后在编码服务打印字串长度6617到了解码服务打印长度成了6620 还要多一点，因些断定是BO...">
 
   <link rel="stylesheet" href="/blog/assets/main.css">
-  <link rel="canonical" href="http://localhost:4000/blog/about/">
+  <link rel="canonical" href="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/08/20/php-json_decode-e8-bf-94-e5-9b-9enull-e7-89-b9-e5-88-ab-e6-98-af-e4-bd-bf-e7-94-a8file_get_contents.html">
   <link rel="alternate" type="application/rss+xml" title="Ebankie blog" href="/blog/feed.xml">
   
   
@@ -62,25 +62,26 @@
 
     <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <article class="post">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title">About</h1>
+    <h1 class="post-title" itemprop="name headline">php json_decode返回NULL 特别是使用file_get_contents</h1>
+    <p class="post-meta"><time datetime="2015-08-20T20:55:28+08:00" itemprop="datePublished">Aug 20, 2015</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">ebankie</span></span></p>
   </header>
 
-  <div class="post-content">
-    <p>This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at <a href="http://jekyllrb.com/">jekyllrb.com</a></p>
+  <div class="post-content" itemprop="articleBody">
+    <p>今天遇到了json_decode无法解析json的情况，很是头痛，查来查去原来 编码服务器可以正常解析，但是解码服务无法解析，等到把整个json字串 放到页面上查看元素突然发现json字串头部多了字串，考虑是BOM问题，然后在编码服务打印字串长度6617到了解码服务打印长度成了6620 还要多一点，因些断定是BOM引起的json_decode无法解析。</p>
 
-<p>You can find the source code for the Jekyll new theme at:</p>
+<p>if(preg_match(‘/^\xEF\xBB\xBF/’,$receive_part))
+{
+$receive_part= substr($receive_part,3);
+}</p>
 
-<p><a href="https://github.com/jekyll/minima">minima</a></p>
-
-<p>You can find the source code for Jekyll at</p>
-
-<p><a href="https://github.com/jekyll/jekyll">jekyll</a></p>
+<p>去掉BOM 解析正常,原来形成应该是编码服务使用header(‘Content-Type:application/json; charset=utf-8’);转UTF－8时形成的BOM 。</p>
 
   </div>
 
+  
 </article>
 
       </div>

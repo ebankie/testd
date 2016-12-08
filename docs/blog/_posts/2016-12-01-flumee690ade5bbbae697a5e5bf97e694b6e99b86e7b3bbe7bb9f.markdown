@@ -1,0 +1,166 @@
+---
+author: ebankie
+comments: true
+date: 2016-12-01 06:55:27+00:00
+layout: post
+link: http://www.ebankie.com/blog/?p=299
+slug: flume%e6%90%ad%e5%bb%ba%e6%97%a5%e5%bf%97%e6%94%b6%e9%9b%86%e7%b3%bb%e7%bb%9f
+title: flume搭建日志收集系统
+wordpress_id: 299
+categories:
+- 技术文章
+---
+
+闲话不说直接上配置文件及过程中注意的问题：
+
+现有两个主机其中一个A做agent1,agent2   B用来collect 日志，并且agent1 agent2统一收集到一个文件里。
+
+flume 配置相关及使用方法网上太多了，关注及学会以下三个组件的使用方法，就基本搞定
+
+
+
+	
+  * Source：用来消费传递到该组件的Event ##即收集日志的方式，可以文件，命令……
+
+	
+  * Channel：中转Event的一个临时存储，保存有Source组件传递过来的Event
+
+	
+  * Sink：从Channel中读取并移除Event，将Event传递到Flow Pipeline中的下一个修复处理服务，或者保存到文件
+
+
+一，配置agent
+
+我官网下载的源码版本为：
+
+apache-flume-1.7.0-bin.tar.gz
+
+agent1配置文件flume-agent.conf.properties 如下：
+
+[well]
+
+agent1.sources = source1
+agent1.sinks = sink1
+agent1.channels = channel1
+
+
+
+# Describe/configure source1
+
+agent1.sources.source1.type = exec
+agent1.sources.source1.command = tail -f /data/logs/access-admin.log
+agent1.sources.source1.channels = channel1
+# Describe sink1
+# agent1.sinks.sink1.type = file_roll
+# agent1.sinks.sink1.sink.directory=/home/dev/bankie/data
+#agent1.sinks.sink1.sink.rollInterval=0
+#
+agent1.sinks.sink1.channel = channel1
+agent1.sinks.sink1.type = avro
+agent1.sinks.sink1.hostname = 10.1.0.8 #B服务的IP
+agent1.sinks.sink1.port = 44444
+
+# Use a channel which buffers events in memory
+agent1.channels.channel1.type = memory
+agent1.channels.channel1.capacity = 50000
+agent1.channels.channel1.transactionCapacity = 10000
+
+
+
+[/well]
+
+agent2配置文件flume-agent2.conf 如下：
+
+[well]
+
+agent2.sources = source1
+agent2.sinks = sink1
+agent2.channels = channel1
+
+
+
+# Describe/configure source1
+
+agent2.sources.source1.type = exec
+agent2.sources.source1.command = tail -f /data/logs/access-web.log
+agent2.sources.source1.channels = channel1
+# Describe sink1
+# agent2.sinks.sink1.type = file_roll
+# agent2.sinks.sink1.sink.directory=/home/dev/bankie/data
+#agent2.sinks.sink1.sink.rollInterval=0
+#
+agent2.sinks.sink1.channel = channel1
+agent2.sinks.sink1.type = avro
+agent2.sinks.sink1.hostname = 10.1.0.8 #B服务IP
+agent2.sinks.sink1.port = 44444
+
+# Use a channel which buffers events in memory
+agent2.channels.channel1.type = memory
+agent2.channels.channel1.capacity = 50000
+agent2.channels.channel1.transactionCapacity = 10000
+
+[/well]
+
+配置文件为conf 或者properties 都可以，关键看起动flume指定的哪个类型
+
+###特别注意 配置agent2.sinks.sink1.hostname时，网上例子全是agent2.sinks.sink1.bind 1.70后是hostname
+
+起动命令：
+
+flume-ng agent -c /home/dev/flume/conf -f /home/dev/flume/conf/flume-agent2.conf -n agent2  -Dflume.root.logger=INFO,console
+
+flume-ng agent -c /home/dev/flume/conf -f /home/dev/flume/conf/flume-agent1.conf.properties  -n agent1  -Dflume.root.logger=INFO,console
+
+##flume-ng -n agent1 名字和配置文件一致，否则报错……，第一次配置以为可以自命名，走了弯路！！
+
+成功信息：
+
+2016-12-01 14:43:46,847 (lifecycleSupervisor-1-0) [WARN - org.apache.flume.api.NettyAvroRpcClient.configure(NettyAvroRpcClient.java:634)] Using default maxIOWorkers
+2016-12-01 14:43:47,133 (lifecycleSupervisor-1-0) [INFO - org.apache.flume.sink.AbstractRpcSink.start(AbstractRpcSink.java:301)] Rpc sink sink1 started.
+
+二、配置server收集端
+
+配置文件为：flume-server.conf
+
+[well]
+
+a1.sources = r1
+a1.sinks = k1
+a1.channels = c1
+
+a1.sources.r1.type = avro  #此处有多种收集方式，网上信息非常多，不再复述
+a1.sources.r1.channels = c1
+a1.sources.r1.bind = 0.0.0.0
+a1.sources.r1.port = 44444
+# Use a channel which buffers events in memory
+
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 50000
+a1.channels.c1.transactionCapacity = 10000
+
+a1.sinks.k1.type = file_roll  ###此处也有多种发送处理，对接kafka,hdfs 都可以，本文集中收集到文件中
+a1.sinks.k1.sink.directory=/home/dev/bankie/data
+a1.sinks.k1.sink.rollInterval = 0 ##agent1,agent2合并一个文件里存储
+a1.sources.r1.channels = c1
+a1.sinks.k1.channel = c1
+
+[/well]
+
+起动命令：
+
+flume-ng agent -c /home/dev/flume/conf -f /home/dev/flume/conf/flume-server.conf -n a1  -Dflume.root.logger=INFO,console
+
+成功后可以看到有如下信息：
+
+Avro source r1 started.
+2016-12-01 14:49:54,575 (New I/O server boss #9) [INFO - org.apache.avro.ipc.NettyServer$NettyServerAvroHandler.handleUpstream(NettyServer.java:171)] [id: 0x8a07a7bc, /10.1.0.9:543 => /10.1.0.8:44444] OPEN
+2016-12-01 14:49:54,576 (New I/O worker #1) [INFO - org.apache.avro.ipc.NettyServer$NettyServerAvroHandler.handleUpstream(NettyServer.java:171)] [id: 0x8a07a7bc, /10.1.0.9:543 => /10.1.0.8:44444] BOUND: /10.1.0.8:44444
+2016-12-01 14:49:54,576 (New I/O worker #1) [INFO - org.apache.avro.ipc.NettyServer$NettyServerAvroHandler.handleUpstream(NettyServer.java:171)] [id: 0x8a07a7bc, /10.1.0.9:543 => /10.1.0.8:44444] CONNECTED: /10.1.0.9:54303
+
+以上有内网映射端口。看自己情况而定
+
+收集日志信息如下：
+
+com"
+- - [01/Dec/2016:14:51:50 +0800] "GET /admin/index/?a=5 HTTP/1.1 "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/
+- - [01/Dec/2016:14:52:44 +0800] "GET /web/user/ HTTP/1.1 "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/"

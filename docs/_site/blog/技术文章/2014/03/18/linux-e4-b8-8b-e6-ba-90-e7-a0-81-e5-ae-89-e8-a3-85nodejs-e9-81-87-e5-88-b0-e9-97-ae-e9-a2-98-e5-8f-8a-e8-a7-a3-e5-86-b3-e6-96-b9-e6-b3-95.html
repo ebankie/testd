@@ -1,0 +1,75 @@
+<p>准备工作</p>
+
+<p>1，从官网下载 <a href="http://nodejs.org/dist/v0.10.26/node-v0.10.26.tar.gz">node-v0.10.26.tar.gz</a></p>
+
+<p>2，升级python 到2.7+</p>
+
+<p>否则会遇到报 fpu = ‘vfpv3’ if armv7 else ‘vfpv2’  错误</p>
+
+<p>解压进入node-v0.10.26源码目录</p>
+
+<p>./configure 正常</p>
+
+<p>make 时出现</p>
+
+<p>make -C out BUILDTYPE=Release
+make[1]: Entering directory <code class="highlighter-rouge">/data/bankie/node-v0.10.26/out'
+make[1]: *** No rule to make target </code>/data/bankie/node-v0.10.26.tar.gz”&gt;node-v0.10.26/out/Release/obj.target/v8_base/gen/d
+ebug-support.o’, needed by <code class="highlighter-rouge">/data/bankie/node-v0.10.26/out/Release/obj.target/deps/v8/tools/gyp/libv
+8_base.a'.  Stop.
+make[1]: Leaving directory </code>/data/bankie/node-v0.10.26/out’</p>
+
+<p>解决：升级 安装GUN make 3.8.1 + ：</p>
+
+<p>OK</p>
+
+<p>如果遇到  mksnapshot 错误可以用</p>
+
+<p>./configure –without-snapshot 解决</p>
+
+<p>make</p>
+
+<p>报错 尝试如下方法解决 ：</p>
+
+<p>    setenv FLOCK  or</p>
+
+<p>export FLOCK</p>
+
+<p>    setenv LINK g++ or</p>
+
+<p>export LINK=g++</p>
+
+<p>nodejs安装所需要的 条件及soft</p>
+
+<ol>
+  <li>
+    <p>GNU make 3.8.1+</p>
+  </li>
+  <li>
+    <p>Python  2.7+</p>
+  </li>
+  <li>
+    <p>增加两个环境变量</p>
+  </li>
+</ol>
+
+<p>   setenv FLOCK or export FLOCK</p>
+
+<p>    setenv LINK g++ or export LINK=g++</p>
+
+<p>我是使用的</p>
+
+<p>export FLOCK
+export LINK=g++</p>
+
+<p>测试</p>
+
+<p>linux:/ # /usr/local/bin/node -v
+v0.10.26</p>
+
+<p>linux:/ # /usr/local/bin/npm -v
+1.4.3</p>
+
+<p>查看端口有没有被其他进程占用 cmd : lsof -i:859</p>
+
+<p>参考： http://www.cyrec.org/posts/nodejs-make-install-environment</p>

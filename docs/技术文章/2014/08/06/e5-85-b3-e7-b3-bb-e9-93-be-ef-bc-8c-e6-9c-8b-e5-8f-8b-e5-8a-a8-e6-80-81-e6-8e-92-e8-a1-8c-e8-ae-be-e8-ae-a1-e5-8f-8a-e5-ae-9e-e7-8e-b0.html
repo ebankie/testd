@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>About</title>
-  <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search resu...">
+  <title>关系链，朋友动态排行设计及实现</title>
+  <meta name="description" content="[well]">
 
   <link rel="stylesheet" href="/blog/assets/main.css">
-  <link rel="canonical" href="http://localhost:4000/blog/about/">
+  <link rel="canonical" href="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2014/08/06/e5-85-b3-e7-b3-bb-e9-93-be-ef-bc-8c-e6-9c-8b-e5-8f-8b-e5-8a-a8-e6-80-81-e6-8e-92-e8-a1-8c-e8-ae-be-e8-ae-a1-e5-8f-8a-e5-ae-9e-e7-8e-b0.html">
   <link rel="alternate" type="application/rss+xml" title="Ebankie blog" href="/blog/feed.xml">
   
   
@@ -62,25 +62,70 @@
 
     <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <article class="post">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title">About</h1>
+    <h1 class="post-title" itemprop="name headline">关系链，朋友动态排行设计及实现</h1>
+    <p class="post-meta"><time datetime="2014-08-06T11:51:25+08:00" itemprop="datePublished">Aug 6, 2014</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">ebankie</span></span></p>
   </header>
 
-  <div class="post-content">
-    <p>This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at <a href="http://jekyllrb.com/">jekyllrb.com</a></p>
+  <div class="post-content" itemprop="articleBody">
+    <p>[well]</p>
 
-<p>You can find the source code for the Jekyll new theme at:</p>
+<p>近期业务出现很多关系链动态排名，加上自己曾经面试被问－－TOP排序问题被人鄙视一回，有时间研究了一下，并且在业务上应用支撑能力还算强大。</p>
 
-<p><a href="https://github.com/jekyll/minima">minima</a></p>
+<p>[/well]</p>
 
-<p>You can find the source code for Jekyll at</p>
+<h1 id="一第一类游戏业务关系链动态排名">一、第一类－游戏业务关系链动态排名</h1>
 
-<p><a href="https://github.com/jekyll/jekyll">jekyll</a></p>
+<p>[well]</p>
+
+<p>1，游戏类业务对排名要求很高，但是对于服务的压力也大，一般通过异步完成即：设置积分和排名计算通过异步完成。</p>
+
+<p>2，我们的业务评估最大用户到亿级所以这个量还是压力山大的，常用的方法如：设计红黑树、分段计算处理等等，但是对于数据库压力还是大，并且数据量也很大，处理亿级对于mysql来说小牛拉大车了，经过评估计算最终选择redis 有序集来完成，内在计算处理还是很OK的，但是同样会面临大数据的问题，经过降级处理，只存储关键KEY及积分减小存储数据，把其他详细信息存储到其他服务，这样异步处理 很OK的。</p>
+
+<p>3，经过计算每个zadd 数据量几K，即使是到亿级的量也就10－20G存储量，所以redis容量可以评估出来了哈，对于用户详细信息，通过DB就可以搞定，一般用户关系排名不会有太多的，假设一个用户一共有３００个朋友，能同时在玩一个游戏的经验值最多1\2，一般不到1\3　所以几十条数据ＤＢ很轻松的。</p>
+
+<p>４，实施，设计好方案下一步就是勇敢的实现了，这个逻辑实现很快，大概二天不到，经过上线测试速度很快，一般７００ＭＳ左右</p>
+
+<p>５，注意问题，关系链数据大redis处理时间要考虑到，排名逻辑是　更新自己　－　更新好友关系链　－　输出结果　其中第二步的时候，考虑是否要用异步。我这里使用实时更新，没用异步。</p>
+
+<p>６，通过线上运营发现，数据到百万没有任何问题，到千万级也只是代理有连接报警，排名逻辑很平稳。</p>
+
+<p>[/well]</p>
+
+<h1 id="二第二类top排名">二、第二类－TOP排名</h1>
+
+<p>[well]</p>
+
+<p>这类排名相对简单一些，不再过多说，直接上一段代码，可以直接ＤＢ解决，我们的业务使用的是cache ，实现整个逻辑的时候发现一个好玩的array方法array_multisor，</p>
+
+<p><strong>array_multisort()</strong>可以用来一次对多个数组进行排序，或者根据某一维或多维对多维数组进行排序。</p>
+
+<p>关联（string）键名保持不变，但数字键名会被重新索引。</p>
+
+<p>输入数组被当成一个表的列并以行来排序——这类似于 SQL 的 ORDER BY 子句的功能。第一个数组是要排序的主要数组。数组中的行（值）比较为相同的话就按照下一个输入数组中相应值的大小来排序，依此类推。</p>
+
+<p>/**
+*排序方法使用自带函数
+*@param $arr 排序数组
+*return $arr 排序完毕
+**/
+public function wsort($arr){
+foreach($arr as $k=&gt;$v){
+$namea[$k] = $v[‘time’];
+$scoa[$k] = $v[‘score’];
+}
+array_multisort($scoa,SORT_DESC ,$namea,SORT_DESC ,$arr);
+return $arr;
+}</p>
+
+<p>[/well]</p>
+
 
   </div>
 
+  
 </article>
 
       </div>

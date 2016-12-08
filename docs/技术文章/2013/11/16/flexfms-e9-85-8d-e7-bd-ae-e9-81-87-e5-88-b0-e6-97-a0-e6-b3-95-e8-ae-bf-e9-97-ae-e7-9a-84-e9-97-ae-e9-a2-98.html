@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>About</title>
-  <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search resu...">
+  <title>flex+fms配置遇到无法访问的问题</title>
+  <meta name="description" content="版本使用的">
 
   <link rel="stylesheet" href="/blog/assets/main.css">
-  <link rel="canonical" href="http://localhost:4000/blog/about/">
+  <link rel="canonical" href="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2013/11/16/flexfms-e9-85-8d-e7-bd-ae-e9-81-87-e5-88-b0-e6-97-a0-e6-b3-95-e8-ae-bf-e9-97-ae-e7-9a-84-e9-97-ae-e9-a2-98.html">
   <link rel="alternate" type="application/rss+xml" title="Ebankie blog" href="/blog/feed.xml">
   
   
@@ -62,25 +62,74 @@
 
     <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <article class="post">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title">About</h1>
+    <h1 class="post-title" itemprop="name headline">flex+fms配置遇到无法访问的问题</h1>
+    <p class="post-meta"><time datetime="2013-11-16T12:11:37+08:00" itemprop="datePublished">Nov 16, 2013</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">ebankie</span></span></p>
   </header>
 
-  <div class="post-content">
-    <p>This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at <a href="http://jekyllrb.com/">jekyllrb.com</a></p>
+  <div class="post-content" itemprop="articleBody">
+    <p>版本使用的</p>
 
-<p>You can find the source code for the Jekyll new theme at:</p>
+<p>FMS4（FLASH MEDIA SERVER）</p>
 
-<p><a href="https://github.com/jekyll/minima">minima</a></p>
+<p>因为安装时有自带的apache WEB服务，本地也安装了apache且端口是80,起动FMS时，才知道原因默认安装的端口也是80所以出现了连接failed,关掉本地apache占用的80后解决</p>
 
-<p>You can find the source code for Jekyll at</p>
+<p>代码如下：</p>
 
-<p><a href="https://github.com/jekyll/jekyll">jekyll</a></p>
+<p>main.asc</p>
+
+<p>userList=[];</p>
+
+<p>application.onAppStart=function()
+{
+trace(“fms服务器启动……”);
+}</p>
+
+<p>application.onConnect = function(currentClient)
+{
+application.acceptConnection(currentClient);
+if (userList.length&gt;=3)
+{
+currentClient.call(“showServerMsg”,null,”已经达到最大用户数”);
+application.rejectConnection(currentClient);
+}
+else
+{
+currentClient.communicateServer= function(value)
+{
+currentClient.username=value;
+trace(currentClient.username+”加入聊天室”);
+userList.push(value);
+trace(“当前用户列表”+userList);
+re = application.broadcastMsg(“playOtherVideo”,userList);
+trace(“playOtherVideo”+re);
+}
+}
+}</p>
+
+<p>application.onDisconnect=function(currentClient)
+{
+trace(“用户”+currentClient.username+”离开聊天室”);</p>
+
+<p>for(j=0;j&lt;userList.length;j++)
+{
+if ( userList[j]==currentClient.username )
+{
+userList.splice(j,1);
+}
+}
+trace(“当前用户列表”+userList);
+application.broadcastMsg(“playOtherVideo”,userList);
+}</p>
+
+<!-- more -->
+
 
   </div>
 
+  
 </article>
 
       </div>

@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>About</title>
-  <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search resu...">
+  <title>gvim /vim windows 下配置</title>
+  <meta name="description" content="“设置UTF－8">
 
   <link rel="stylesheet" href="/blog/assets/main.css">
-  <link rel="canonical" href="http://localhost:4000/blog/about/">
+  <link rel="canonical" href="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2014/01/18/gvim-vim-windows-e4-b8-8b-e9-85-8d-e7-bd-ae.html">
   <link rel="alternate" type="application/rss+xml" title="Ebankie blog" href="/blog/feed.xml">
   
   
@@ -62,25 +62,33 @@
 
     <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <article class="post">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title">About</h1>
+    <h1 class="post-title" itemprop="name headline">gvim /vim windows 下配置</h1>
+    <p class="post-meta"><time datetime="2014-01-18T10:51:34+08:00" itemprop="datePublished">Jan 18, 2014</time> • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">ebankie</span></span></p>
   </header>
 
-  <div class="post-content">
-    <p>This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at <a href="http://jekyllrb.com/">jekyllrb.com</a></p>
+  <div class="post-content" itemprop="articleBody">
+    <p>“设置UTF－8</p>
 
-<p>You can find the source code for the Jekyll new theme at:</p>
+<p>set encoding=utf-8
+set termencoding=utf-8
+set formatoptions+=mM
+set fencs=utf-8,gbk</p>
 
-<p><a href="https://github.com/jekyll/minima">minima</a></p>
+<p>set fileencodings=utf-8,chinese,latin-1</p>
 
-<p>You can find the source code for Jekyll at</p>
+<p>“解决consle输出乱码
+language messages zh_CN.utf-8</p>
 
-<p><a href="https://github.com/jekyll/jekyll">jekyll</a></p>
+<p>“菜单乱码
+source $VIMRUNTIME/delmenu.vim
+source $VIMRUNTIME/menu.vim</p>
 
   </div>
 
+  
 </article>
 
       </div>

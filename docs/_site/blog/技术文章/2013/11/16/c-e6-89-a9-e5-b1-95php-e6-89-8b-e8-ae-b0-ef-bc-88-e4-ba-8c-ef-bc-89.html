@@ -1,0 +1,134 @@
+<p>上一章已经写了个简单的C++扩展，这章开始写一个多文件的扩展包括面向对象的使用</p>
+
+<p>1，在上一章成功的基础上，在ext_bankie/下建一个hello.cpp hello.h文件用来编写C++方法</p>
+
+<p>然后编辑hello.h 内容如下：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>#ifndef _MYCLASS_H_                                                       
+  7 #define _MYCLASS_H_                                                       
+  8 #include &lt;iostream&gt;                                                       
+  9 using namespace std;                                                      
+ 10 class classHello{
+ 11         private: string dis;                                              
+ 12 
+ 13         public: classHello(string str);                                   
+ 14         public:  ~classHello();                                           
+ 15         int hello_add(int a,int b);                                       
+ 16         string restr();                                        
+ 17 };                                                                        
+ 18 #endif
+</code></pre>
+</div>
+
+<p>保存退出</p>
+
+<p>2，编辑hello.cpp 内容如下：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code> extern "C"{
+  8 #include "php.h"
+  9 #include "php_ini.h"
+ 10 #include "ext/standard/info.h"
+ 11 }
+ 12 #include "hello.h"
+ 13 classHello::classHello(string st){
+ 14    dis = st;
+ 15 }
+ 16 classHello::~classHello(){
+ 17 
+ 18 }
+ 19 
+ 20 int classHello::hello_add(int a,int b){
+ 21         return a+b;
+ 22 }
+ 23 
+ 24 string classHello::restr(){
+ 25         return dis;
+ 26 }
+~
+</code></pre>
+</div>
+
+<p>保存退出，</p>
+
+<p>3，我们编辑完C++有关文件之后，要去config.m4里，把要用到的CPP文件注册到PHP_NEW_EXTENSION里，，如下所示：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>     PHP_REQUIRE_CXX()
+ 58  PHP_ARG_ENABLE(ext_bankie, whether to enable ext_bankie support,
+ 59  Make sure that the comment is aligned:
+ 60  [  --enable-ext_bankie           Enable ext_bankie support])
+ 61 
+ 62  PHP_ADD_LIBRARY(stdc++, ?.. EXTRA_LDFLAGS)
+ 63   PHP_NEW_EXTENSION(ext_bankie, ext_bankie.cpp hello.cpp, $ext_shared)
+ 64 fi
+</code></pre>
+</div>
+
+<p>4，在ext_bankie.cpp里要使用hello_add的方法，所以编辑ext_bankie.cpp如下：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>PHP_FUNCTION(helloadd){
+201         long int a, b;
+202         long int result;
+203         char *test;
+204         if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll", &amp;a, &amp;b) == FAILURE) {
+205                 return;
+206         }
+207         classHello obj("this is test");
+208         result= obj.hello_add(a,b);
+209         RETURN_LONG(result);
+210 }
+
+
+
+
+//要使用这个方法，要到php_ext_bankie.h 里注册一下，参考上一文章
+
+
+
+
+PHP_FUNCTION(reStr){
+213         char *result ;
+214         classHello obj("this is test");
+215         sprintf(result,"%s",obj.restr().c_str());//这个地方要注意，直接是不能char * 到string 虽然用的c_str()也不可以，
+216 
+217     //  result=obj.restr();
+218         RETURN_STRING(result,0);
+219 }
+</code></pre>
+</div>
+
+<p>注207行是我们自己写的类方法，</p>
+
+<p>208行是ZEND返回值，可参考<a href="http://blog.csdn.net/llj480028/article/details/7814436">http://blog.csdn.net/llj480028/article/details/7814436</a> 有详细说明</p>
+
+<p>4，然后执行 configure命令，重新生成ext_bankie.so ，如果还是有问题，重新使用phpize生成一下脚本文件</p>
+
+<p>5,测试，我的测试如下：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;?php if (!extension_loaded("ext_bankie"))
+  5  @ini_set('display_errors', 1);
+  6  error_reporting(E_ALL ^ E_NOTICE);
+  7  dl('ext_bankie.so');
+  8     for ($i = 1; $i &lt;= 3; $i++) {
+  9         print testFun("ThisIsUseless", $i);
+ 10         print "\t\n";
+ 11     }
+ 12 print helloadd(10,10);
+ 13 print $re; ?&gt;
+</code></pre>
+</div>
+
+<p>结果22：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ThisIsUseless	
+ThisIsUselessThisIsUseless	
+ThisIsUselessThisIsUselessThisIsUseless	
+20
+
+
+
+
+ext_bankie extension is available
+</code></pre>
+</div>
+
+<p>如有不清楚步骤参考上一章：<a href="http://blog.csdn.net/llj480028/article/details/7802398">http://blog.csdn.net/llj480028/article/details/7802398</a></p>

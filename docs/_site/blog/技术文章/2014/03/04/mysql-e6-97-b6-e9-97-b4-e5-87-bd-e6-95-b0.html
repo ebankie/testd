@@ -1,0 +1,375 @@
+<p>[well]</p>
+
+<p>在工作中遇到sql语句时间对比问题，查了好多时间函数，正好总结一下：</p>
+
+<p>1,　ADDDAYE (expr,days) <em>expr</em>, <em>days为整数值DATE_ADD()为相同功能函数，ADDTIME(<strong>expr_,_expr2</strong>)为增加 h,i,s</em></p>
+
+<p><strong>SELECT ADDDATE(‘1998-01-02’, 31);</strong></p>
+
+<p>-&gt; ‘1998-02-02’</p>
+
+<p>2,CURDATE() 返回当前日期　具体格式根据函数用在字符串或是数字语境中而定</p>
+
+<p>mysql&gt; <strong>SELECT CURDATE();</strong></p>
+
+<p>-&gt; ‘1997-12-15’</p>
+
+<p>mysql&gt; <strong>SELECT CURDATE() + 0;</strong></p>
+
+<p>-&gt; 19971215</p>
+
+<p>3,CURTIME() 　将当前时间以’HH:MM:SS’或 HHMMSS 的格式返回， 具体格式根据函数用在字符串或是数字语境中而定</p>
+
+<p>4，DATE(<em>expr</em>)</p>
+
+<p>提取日期或时间日期表达式_expr_中的日期部分。</p>
+
+<p>mysql&gt; <strong>SELECT DATE(‘2003-12-31 01:02:03’);</strong></p>
+
+<p>-&gt; ‘2003-12-31’</p>
+
+<p>5，DATEDIFF(<em>expr</em>,<em>expr2</em>)</p>
+
+<p>DATEDIFF() 返回起始时间 <em>expr_和结束时间_expr2_之间的天数。_Expr_和_expr2</em> 为日期或 date-and-time 表达式。计算中只用到这些值的日期部分。</p>
+
+<p>mysql&gt; <strong>SELECT DATEDIFF(‘1997-12-31 23:59:59’,’1997-12-30’);</strong></p>
+
+<p>-&gt; 1</p>
+
+<p>mysql&gt; <strong>SELECT DATEDIFF(‘1997-11-30 23:59:59’,’1997-12-31’);</strong></p>
+
+<p>-&gt; -31</p>
+
+<p>6，DATE_FORMAT(<em>date</em>,<em>format</em>) 根据_format_ 字符串安排_date_ 值的格式。</p>
+
+<p>但是传字段参数时不是很好用，特别是_int类型转换成null，而from_unixtime是OK的_</p>
+
+<p>以下说明符可用在 <em>format</em> 字符串中：</p>
+<table cellpadding="0" width="531" border="1">
+<tbody>
+<tr>
+
+<td width="59">**说明符**
+</td>
+
+<td>**说明**
+</td>
+</tr>
+<tr>
+
+<td width="59">%a
+</td>
+
+<td>工作日的缩写名称  (Sun..Sat)
+</td>
+</tr>
+<tr>
+
+<td width="59">%b
+</td>
+
+<td>月份的缩写名称  (Jan..Dec)
+</td>
+</tr>
+<tr>
+
+<td width="59">%c
+</td>
+
+<td>月份，数字形式(0..12)
+</td>
+</tr>
+<tr>
+
+<td width="59">%D
+</td>
+
+<td>带有英语后缀的该月日期  (0th, 1st, 2nd, 3rd, ...)
+</td>
+</tr>
+<tr>
+
+<td width="59">%d
+</td>
+
+<td>该月日期, 数字形式 (00..31)
+</td>
+</tr>
+<tr>
+
+<td width="59">%e
+</td>
+
+<td>该月日期, 数字形式(0..31)
+</td>
+</tr>
+<tr>
+
+<td width="59">%f
+</td>
+
+<td>微秒 (000000..999999)
+</td>
+</tr>
+<tr>
+
+<td width="59">%H
+</td>
+
+<td>小时(00..23)
+</td>
+</tr>
+<tr>
+
+<td width="59">%h
+</td>
+
+<td>小时(01..12)
+</td>
+</tr>
+<tr>
+
+<td width="59">%I
+</td>
+
+<td>小时 (01..12)
+</td>
+</tr>
+<tr>
+
+<td width="59">%i
+</td>
+
+<td>分钟,数字形式 (00..59)
+</td>
+</tr>
+<tr>
+
+<td width="59">%j
+</td>
+
+<td>一年中的天数 (001..366)
+</td>
+</tr>
+<tr>
+
+<td width="59">%k
+</td>
+
+<td>小时 (0..23)
+</td>
+</tr>
+<tr>
+
+<td width="59">%l
+</td>
+
+<td>小时 (1..12)
+</td>
+</tr>
+<tr>
+
+<td width="59">%M
+</td>
+
+<td>月份名称 (January..December)
+</td>
+</tr>
+<tr>
+
+<td width="59">%m
+</td>
+
+<td>月份, 数字形式 (00..12)
+</td>
+</tr>
+<tr>
+
+<td width="59">%p
+</td>
+
+<td>上午（AM）或下午（ PM）
+</td>
+</tr>
+<tr>
+
+<td width="59">%r
+</td>
+
+<td>时间 , 12小时制 (小时hh:分钟mm:秒数ss 后加 AM或PM)
+</td>
+</tr>
+<tr>
+
+<td width="59">%S
+</td>
+
+<td>秒 (00..59)
+</td>
+</tr>
+<tr>
+
+<td width="59">%s
+</td>
+
+<td>秒 (00..59)
+</td>
+</tr>
+<tr>
+
+<td width="59">%T
+</td>
+
+<td>时间 , 24小时制 (小时hh:分钟mm:秒数ss)
+</td>
+</tr>
+<tr>
+
+<td width="59">%U
+</td>
+
+<td>周 (00..53), 其中周日为每周的第一天
+</td>
+</tr>
+<tr>
+
+<td width="59">%u
+</td>
+
+<td>周 (00..53), 其中周一为每周的第一天
+</td>
+</tr>
+<tr>
+
+<td width="59">%V
+</td>
+
+<td>周 (01..53), 其中周日为每周的第一天 ; 和 %X同时使用
+</td>
+</tr>
+<tr>
+
+<td width="59">%v
+</td>
+
+<td>周 (01..53), 其中周一为每周的第一天 ; 和 %x同时使用
+</td>
+</tr>
+<tr>
+
+<td width="59">%W
+</td>
+
+<td>工作日名称 (周日..周六)
+</td>
+</tr>
+<tr>
+
+<td width="59">%w
+</td>
+
+<td>一周中的每日 (0=周日..6=周六)
+</td>
+</tr>
+<tr>
+
+<td width="59">%X
+</td>
+
+<td>该周的年份，其中周日为每周的第一天, 数字形式,4位数;和%V同时使用
+</td>
+</tr>
+<tr>
+
+<td width="59">%x
+</td>
+
+<td>该周的年份，其中周一为每周的第一天, 数字形式,4位数;和%v同时使用
+</td>
+</tr>
+<tr>
+
+<td width="59">%Y
+</td>
+
+<td>年份, 数字形式,4位数
+</td>
+</tr>
+<tr>
+
+<td width="59">%y
+</td>
+
+<td>年份, 数字形式 (2位数)
+</td>
+</tr>
+<tr>
+
+<td width="59">%%
+</td>
+
+<td>‘%’文字字符
+</td>
+</tr>
+</tbody>
+</table>
+<p>所有其它字符都被复制到结果中，无需作出解释。</p>
+
+<p>注意， ‘%’字符要求在格式指定符之前。</p>
+
+<p>月份和日期说明符的范围从零开始，原因是 MySQL允许存储诸如 ‘2004-00-00’的不完全日期.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mysql&gt; &lt;b&gt;SELECT DATE_FORMAT('1997-10-04 22:23:00', '%W %M %Y');&lt;/b&gt;
+
+
+
+
+        -&gt; 'Saturday October 1997'
+7,
+&lt;ul&gt;
+	&lt;li style="display: inline !important;"&gt;DAY(&lt;i&gt;date&lt;/i&gt;)返回&lt;i&gt;date&lt;/i&gt; 对应的工作日名称&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+</div>
+
+<p><strong>SELECT DAYNAME(‘1998-02-05’);</strong></p>
+
+<p>-&gt; ‘周四’</p>
+
+<p>8，DAYOFMONTH(<em>date</em>)  返回_date_ 对应的该月日期，范围是从 1到31。既提取相应 哪天</p>
+
+<p>9,DAYOFWEEK(date）同上返回工作日期 (1 = 周日, 2 = 周一, …, 7 = 周六)对应的工作日索引</p>
+
+<p>10，DAYOFYEAR(<em>date</em>)返回_date_ 对应的一年中的天数，范围是从 1到366。</p>
+
+<p>mysql&gt; <strong>SELECT DAYOFYEAR(‘1998-02-03’);</strong></p>
+
+<p>-&gt; 34</p>
+
+<p>11，FROM_UNIXTIME(<em>unix_timestamp</em>) , FROM_UNIXTIME(<em>unix_timestamp</em>,<em>format</em>)</p>
+
+<p>返回’YYYY-MM-DD HH:MM:SS’或YYYYMMDDHHMMSS 格式值的_unix_timestamp_参数表示，具体格式取决于该函数是否用在字符串中或是数字语境中。</p>
+
+<p>若_format_ 已经给出，则结果的格式是根据_format_ 字符串而定。 <em>format</em> 可以包含同DATE_FORMAT() 函数输入项列表中相同的说明符。</p>
+
+<p>mysql&gt; <strong>SELECT FROM_UNIXTIME(875996580);</strong></p>
+
+<p>-&gt; ‘1997-10-04 22:23:00’</p>
+
+<p>mysql&gt; <strong>SELECT FROM_UNIXTIME(875996580) + 0;</strong></p>
+
+<p>-&gt; 19971004222300</p>
+
+<p>mysql&gt; <strong>SELECT FROM_UNIXTIME(UNIX_TIMESTAMP(),</strong></p>
+
+<p>-&gt;                      <strong>‘%Y %D %M %h:%i:%s %x’);</strong></p>
+
+<p>-&gt; ‘2003 6th August 06:22:58 2003’</p>
+
+<p>[/well]</p>
+
+<p>[well]</p>
+
+<p>常用日期函数 例如时间比较：data_add ().datediff(),data_sub().,时间格式化函数，date_format(),from_unixtime()</p>
+
+<p>[/well]</p>
