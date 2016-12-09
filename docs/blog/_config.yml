@@ -1,15 +1,15 @@
 # Site settings
 name: Ebankie Blog
 email: ebankie@126.com
-author: Ebankie
+author: Freud Kang
 url: http://ebankie.github.io/blog/
-resume_site: http://ebankie.github.io/blog/
+resume_site: http://www.ebankie.com/blog/?page_id=2
 github: https://github.com/ebankie/
 baseurl: "/blog"
-description: Actually, less is more!
-meta_description: 康志华;个人博客;学而不思则罔;思而不学则殆;生命不止;折腾不休
-motto: It's our wits that make us men.
-banner: 学而不思则罔，思而不学则殆。
+description: 卓尔有信,成就人生!
+meta_description: Ebankie Blog
+motto: Bankie Blog互联网改变人的生活
+banner: 卓尔有信,成就人生!
 
 #permalink: /:categories/:year/:month/:day/:title/
 permalink: /:year/:month/:day/:title/
