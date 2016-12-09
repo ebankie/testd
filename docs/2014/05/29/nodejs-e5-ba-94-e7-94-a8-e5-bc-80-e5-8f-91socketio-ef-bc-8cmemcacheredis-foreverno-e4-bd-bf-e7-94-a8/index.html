@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>nodejs 应用开发socketio，memcache,redis ,forever使用</title>
+
+	<link rel="shortcut icon" href="/blog/styles/images/favicon.jpg">
+	<link rel="icon" href="/blog/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/blog/styles/css/index.css">
+	<link rel="stylesheet" href="/blog/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/blog/2014/05/29/nodejs-e5-ba-94-e7-94-a8-e5-bc-80-e5-8f-91socketio-ef-bc-8cmemcacheredis-foreverno-e4-bd-bf-e7-94-a8/">
+	<link rel="alternate" type="application/rss+xml" title="Ebankie Blog" href="/blog/feed.xml">
+	
+	<meta name="description" content="康志华;个人博客;学而不思则罔;思而不学则殆;生命不止;折腾不休">
+
+	<script src="/blog/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "//hm.baidu.com/hm.js?94be4b0f9fc5d94cc0d0415ea6761ae9";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+
+  <body class="index">
+
+    <header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">
+        <img src="/blog/styles/images/logo.jpg">
+      </a>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">    
+        <li>
+          <a href="/blog/">Home</a>
+        </li>
+        <li>
+          <a href="/blog/categories/">大类分解</a>
+        </li>
+        <li>
+          <a href="/blog/tag">小类内聚</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="/blog/donate/"><strong>打赏</strong></a>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a rel="nofollow" target="_blank" href="https://github.com/ebankie/">Github</a></li>
+            <li><a rel="nofollow" target="_blank" href="http://ebankie.github.io/blog/">关于作者</a></li>
+            <li><a rel="nofollow" href="/blog/books">我的书单</a></li>
+            <li><a rel="nofollow" href="/blog/reference">推荐博客</a></li>
+            <li><a href="/blog/feed.xml">RSS订阅</a></li>
+            <li class="divider"></li>
+            <li><a rel="nofollow" target="_blank" href="https://github.com/luoyan35714/LessOrMore.git">本项目</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+    <div class="docs-header" id="content">
+  <div class="container">
+  	
+  		<!--
+		    <h1>nodejs 应用开发socketio，memcache,redis ,forever使用</h1>
+		    <p>Post on May 29, 2014 by <a href="/about">Ebankie</a></p>
+		-->
+		    <h1>It's our wits that make us men.</h1>
+    
+  </div>
+</div>
+    
+      
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/blog/categories/#技术文章-ref">技术文章</a>	/
+    	<a href="/blog/tag/#-ref"></a>
+    
+  </div>
+</div>
+
+    
+
+    <div class="container docs-container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar hidden-print" role="complementary">
+        <div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2016">2016</a>
+          <ul class="nav">
+            <li><a href="#month_2016_December">December</a></li>
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2015">2015</a>
+            <ul class="nav">
+              <li><a href="#month_2015_November">November</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_September">September</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_August">August</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_June">June</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2014">2014</a>
+            <ul class="nav">
+              <li><a href="#month_2014_November">November</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_September">September</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_August">August</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_March">March</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2013">2013</a>
+            <ul class="nav">
+              <li><a href="#month_2013_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2013_November">November</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+      </div>
+    </div>
+    <div class="col-md-9" role="main">
+      <div class="panel docs-content">
+        <div class="wrapper">
+            <header class="post-header">
+              <h1 class="post-title">nodejs 应用开发socketio，memcache,redis ,forever使用</h1>
+              <!--
+                <p class="post-meta">May 29, 2014 • ebankie</p>
+              -->
+              <div class="meta">Posted on <span class="postdate">May 29, 2014</span> By <a target="_blank" href="http://localhost:4000">Ebankie</a></div>
+              <br />
+            </header>
+            <article class="post-content">
+              <p>[well]一、安装</p>
+
+<p>全局安装使用 forever</p>
+
+<p>#:npm install forever -g</p>
+
+<p>在应用目录安装memcahce ,redis ,socket.io</p>
+
+<p>#:npm install memcache</p>
+
+<p>#:npm install redis</p>
+
+<p>#:npm install socket.io</p>
+
+<p>安装完具体使用 请查看  node_modules 下 相应 example.js  或者 simple ,test 亦可</p>
+
+<p>├── memcache@0.3.0
+├─┬ memcached@0.2.8
+│ ├─┬ hashring@0.0.8
+│ │ ├── bisection@0.0.3
+│ │ └── simple-lru-cache@0.0.1
+│ └─┬ jackpot@0.0.6
+│ └── retry@0.6.0
+├── redis@0.10.1
+├─┬ socket.io@0.9.17
+│ ├── base64id@0.1.0
+│ ├── policyfile@0.0.4
+│ ├── redis@0.7.3
+│ └─┬ socket.io-client@0.9.16
+│ ├── active-x-obfuscator@0.0.1
+│ ├── uglify-js@1.2.5
+│ ├─┬ ws@0.4.31
+│ │ ├── commander@0.6.1
+│ │ ├── nan@0.3.2
+│ │ ├── options@0.0.5
+│ │ └── tinycolor@0.0.1
+│ └── xmlhttprequest@1.4.2
+└── zeparser@0.0.7 invali</p>
+
+<p>[/well]</p>
+
+<p>二、使用forever</p>
+
+<p>node应用遇到出错时会退出服务，这对于上线的服务是致命的，伤害用户，流失用户。</p>
+
+<p>使用forever 进程管理应用</p>
+
+<p>起动：</p>
+
+<p>#：forever start app.js</p>
+
+<p>查看node服务器状态</p>
+
+<p>#:forever list</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;span style="font-family: Georgia, 'Times New Roman', 'Bitstream Charter', Times, serif; font-size: 13px; line-height: 19px;"&gt;查看 进程是否起动，&lt;/span&gt;
+</code></pre>
+</div>
+
+<table>
+  <tbody>
+    <tr>
+      <td>#:netstat -npl</td>
+      <td>grep 1234</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>或</p>
+
+<p>#: lsof -i:1234</p>
+
+<p>找出node app.js 的pid</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>#:ps -aux  </td>
+      <td>grep node</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>kill -9 进程号，看看是否重新起动，注 pid 重新起动后改变</p>
+
+<p>/usr/local/bin/forever -p  -l /data/nodelogs/access.log -e /data/nodelogs/error.log -a -w start /data/node/server.js   查看日志</p>
+
+<p>访问日志在 查看 forever list 可以列出</p>
+
+<p>三、socketio 遇到的问题</p>
+
+<p>Access-Control-Allow-Origin　跨域问题在socket1.04版本几乎是没有办法解决</p>
+
+<p>/npm -install socketio@0.9.16</p>
+
+<p>回复到0.9.16问题解决</p>
+
+<p>四、监控脚本</p>
+
+
+            </article>
+        </div>
+      </div>
+      <div class="panel docs-content">
+        <article class="post-content">
+          <div class="wrapper">
+            
+
+
+  <div class="ds-thread" data-thread-key="/2014/05/29/nodejs-e5-ba-94-e7-94-a8-e5-bc-80-e5-8f-91socketio-ef-bc-8cmemcacheredis-foreverno-e4-bd-bf-e7-94-a8/" data-title="nodejs 应用开发socketio，memcache,redis ,forever使用" data-url="http://localhost:4000/2014/05/29/nodejs-e5-ba-94-e7-94-a8-e5-bc-80-e5-8f-91socketio-ef-bc-8cmemcacheredis-foreverno-e4-bd-bf-e7-94-a8/"></div>
+
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"ebankie"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+</script>
+
+
+ 
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <footer class="footer" role="contentinfo">
+	<div class="container">
+		<p class="copyright">Copyright &copy; 2014-2016 <a href="http://ebankie.github.io/blog/"><code>Ebankie</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/blog/styles/js/jquery.min.js"></script>
+<script src="/blog/styles/js/bootstrap.min.js"></script>
+<script src="/blog/styles/js/holder.min.js"></script>
+<script src="/blog/styles/js/application.js"></script>
+<script src="/blog/styles/js/lessismore.js"></script>
+
+  </body>
+</html>

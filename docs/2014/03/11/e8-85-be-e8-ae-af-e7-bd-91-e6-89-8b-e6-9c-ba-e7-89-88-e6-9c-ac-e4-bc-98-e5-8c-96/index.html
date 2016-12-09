@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>腾讯网手机版本优化</title>
+
+	<link rel="shortcut icon" href="/blog/styles/images/favicon.jpg">
+	<link rel="icon" href="/blog/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/blog/styles/css/index.css">
+	<link rel="stylesheet" href="/blog/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/blog/2014/03/11/e8-85-be-e8-ae-af-e7-bd-91-e6-89-8b-e6-9c-ba-e7-89-88-e6-9c-ac-e4-bc-98-e5-8c-96/">
+	<link rel="alternate" type="application/rss+xml" title="Ebankie Blog" href="/blog/feed.xml">
+	
+	<meta name="description" content="康志华;个人博客;学而不思则罔;思而不学则殆;生命不止;折腾不休">
+
+	<script src="/blog/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "//hm.baidu.com/hm.js?94be4b0f9fc5d94cc0d0415ea6761ae9";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+
+  <body class="index">
+
+    <header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">
+        <img src="/blog/styles/images/logo.jpg">
+      </a>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">    
+        <li>
+          <a href="/blog/">Home</a>
+        </li>
+        <li>
+          <a href="/blog/categories/">大类分解</a>
+        </li>
+        <li>
+          <a href="/blog/tag">小类内聚</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="/blog/donate/"><strong>打赏</strong></a>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a rel="nofollow" target="_blank" href="https://github.com/ebankie/">Github</a></li>
+            <li><a rel="nofollow" target="_blank" href="http://ebankie.github.io/blog/">关于作者</a></li>
+            <li><a rel="nofollow" href="/blog/books">我的书单</a></li>
+            <li><a rel="nofollow" href="/blog/reference">推荐博客</a></li>
+            <li><a href="/blog/feed.xml">RSS订阅</a></li>
+            <li class="divider"></li>
+            <li><a rel="nofollow" target="_blank" href="https://github.com/luoyan35714/LessOrMore.git">本项目</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+    <div class="docs-header" id="content">
+  <div class="container">
+  	
+  		<!--
+		    <h1>腾讯网手机版本优化</h1>
+		    <p>Post on Mar 11, 2014 by <a href="/about">Ebankie</a></p>
+		-->
+		    <h1>It's our wits that make us men.</h1>
+    
+  </div>
+</div>
+    
+      
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/blog/categories/#技术文章-ref">技术文章</a>	/
+    	<a href="/blog/tag/#-ref"></a>
+    
+  </div>
+</div>
+
+    
+
+    <div class="container docs-container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar hidden-print" role="complementary">
+        <div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2016">2016</a>
+          <ul class="nav">
+            <li><a href="#month_2016_December">December</a></li>
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2015">2015</a>
+            <ul class="nav">
+              <li><a href="#month_2015_November">November</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_September">September</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_August">August</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_June">June</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2014">2014</a>
+            <ul class="nav">
+              <li><a href="#month_2014_November">November</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_September">September</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_August">August</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_March">March</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2013">2013</a>
+            <ul class="nav">
+              <li><a href="#month_2013_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2013_November">November</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+      </div>
+    </div>
+    <div class="col-md-9" role="main">
+      <div class="panel docs-content">
+        <div class="wrapper">
+            <header class="post-header">
+              <h1 class="post-title">腾讯网手机版本优化</h1>
+              <!--
+                <p class="post-meta">Mar 11, 2014 • ebankie</p>
+              -->
+              <div class="meta">Posted on <span class="postdate">Mar 11, 2014</span> By <a target="_blank" href="http://localhost:4000">Ebankie</a></div>
+              <br />
+            </header>
+            <article class="post-content">
+              <p>业务名称：腾讯网手机版本
+业务地址：http://xw.qq.com
+<img src="http://km.oa.com/files/post_photo/760/180760/9cad2344fc314c8d480d99410f238169.png" alt="" />
+背景：项目起动快，前期基本上以面向过程的方式开发，主要使用smarty，接口API的方式实现功能。随项目进行，问题也出现。用smarty时，首次访问速度太慢。技术架构不适合后期需求扩展。第一次优化调整从两方面入手，技术构架和页面的静态化。
+调整后结构如下：
+<img src="http://km.oa.com/files/photos/pictures/201311/1383793842_21.png" alt="" />
+技术构架优化：从单一入口扩展成三个版本iphone/simple/senoir  外加一个对外服务service 。三个版本APP结构类似。这样就满足大多数无线手机设备。iphone 普通版本，适合android,IOS 等等，simple适合Symbian等低端机型，senoir高端版本只适合iphone IOS用户， 一些定制化内容。并且三个版本可分布式部署，通用类库为 Libs。
+页面优化：首页与频道首页全面静态化，由服务器crontab定时更新页面，容错处理，接口API有问题时，页面保留最近一次更新时的数据。（这个地方后来真的起很大作用，API出问题时至少首页都是好用的）
+路由规则优化：由原来单一入口优化成根据业务需求访问定位不同处理逻辑，类似工厂模式</p>
+
+<p>这次优化大大降低耦合度，解决了新需求的扩展与首页页面访问速度问题（基本小于500MS），基本是新的需求能很快响应。尔后使用smarty缓存的问题显示出现了，缓存文件太大占满磁盘导致WEB服务器死掉。
+第二次优化缓存与文章页面，不再使用smarty自有缓存，重新设计缓存逻辑，基本思路是使用静态文件缓存，根据时间来更新缓存。动态判断磁盘空间删除缓存，让每个访问用户成为清理缓存的触发者。
+设计核心代码：
+创建缓存：
+<img src="http://km.oa.com/files/photos/pictures/201311/1383795884_61.png" alt="" /></p>
+
+<p>删除缓存：此个是访问用户触发。
+<img src="http://km.oa.com/files/photos/pictures/201311/1383796047_19.png" alt="" />
+读取缓存是根据文件修改时间，过期则重新写缓存。其他优化细节把不需要加载smarty库文件地方去掉，按需加载。优化效果如下：
+<img src="http://km.oa.com/files/photos/pictures/201311/1383796512_4.png" alt="" />
+本地速度提高近三倍
+线上测试也近提高三倍
+<img src="http://km.oa.com/files/photos/pictures/201311/1383808642_63.png" alt="" />
+提高速度的原因总结为：使用新缓存方式，文件按需要加载和其他比如调整判断缓存代码等。</p>
+
+<p>项目今年进行首页改版后发现个问题，首页二级栏目过多，加载耗时，静态化首页逻辑需要再重新设计。优化点，首页也要按需加载，用户往下滑动时再加载，数据用内存cache，节省API时间，后续补充完善……</p>
+
+            </article>
+        </div>
+      </div>
+      <div class="panel docs-content">
+        <article class="post-content">
+          <div class="wrapper">
+            
+
+
+  <div class="ds-thread" data-thread-key="/2014/03/11/e8-85-be-e8-ae-af-e7-bd-91-e6-89-8b-e6-9c-ba-e7-89-88-e6-9c-ac-e4-bc-98-e5-8c-96/" data-title="腾讯网手机版本优化" data-url="http://localhost:4000/2014/03/11/e8-85-be-e8-ae-af-e7-bd-91-e6-89-8b-e6-9c-ba-e7-89-88-e6-9c-ac-e4-bc-98-e5-8c-96/"></div>
+
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"ebankie"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+</script>
+
+
+ 
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <footer class="footer" role="contentinfo">
+	<div class="container">
+		<p class="copyright">Copyright &copy; 2014-2016 <a href="http://ebankie.github.io/blog/"><code>Ebankie</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/blog/styles/js/jquery.min.js"></script>
+<script src="/blog/styles/js/bootstrap.min.js"></script>
+<script src="/blog/styles/js/holder.min.js"></script>
+<script src="/blog/styles/js/application.js"></script>
+<script src="/blog/styles/js/lessismore.js"></script>
+
+  </body>
+</html>

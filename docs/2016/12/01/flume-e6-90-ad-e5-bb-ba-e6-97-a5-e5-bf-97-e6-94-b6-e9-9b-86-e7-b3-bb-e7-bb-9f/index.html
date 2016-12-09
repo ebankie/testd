@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>flume搭建日志收集系统</title>
+
+	<link rel="shortcut icon" href="/blog/styles/images/favicon.jpg">
+	<link rel="icon" href="/blog/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/blog/styles/css/index.css">
+	<link rel="stylesheet" href="/blog/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/blog/2016/12/01/flume-e6-90-ad-e5-bb-ba-e6-97-a5-e5-bf-97-e6-94-b6-e9-9b-86-e7-b3-bb-e7-bb-9f/">
+	<link rel="alternate" type="application/rss+xml" title="Ebankie Blog" href="/blog/feed.xml">
+	
+	<meta name="description" content="康志华;个人博客;学而不思则罔;思而不学则殆;生命不止;折腾不休">
+
+	<script src="/blog/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "//hm.baidu.com/hm.js?94be4b0f9fc5d94cc0d0415ea6761ae9";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+
+  <body class="index">
+
+    <header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">
+        <img src="/blog/styles/images/logo.jpg">
+      </a>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">    
+        <li>
+          <a href="/blog/">Home</a>
+        </li>
+        <li>
+          <a href="/blog/categories/">大类分解</a>
+        </li>
+        <li>
+          <a href="/blog/tag">小类内聚</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="/blog/donate/"><strong>打赏</strong></a>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a rel="nofollow" target="_blank" href="https://github.com/ebankie/">Github</a></li>
+            <li><a rel="nofollow" target="_blank" href="http://ebankie.github.io/blog/">关于作者</a></li>
+            <li><a rel="nofollow" href="/blog/books">我的书单</a></li>
+            <li><a rel="nofollow" href="/blog/reference">推荐博客</a></li>
+            <li><a href="/blog/feed.xml">RSS订阅</a></li>
+            <li class="divider"></li>
+            <li><a rel="nofollow" target="_blank" href="https://github.com/luoyan35714/LessOrMore.git">本项目</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+    <div class="docs-header" id="content">
+  <div class="container">
+  	
+  		<!--
+		    <h1>flume搭建日志收集系统</h1>
+		    <p>Post on Dec 01, 2016 by <a href="/about">Ebankie</a></p>
+		-->
+		    <h1>It's our wits that make us men.</h1>
+    
+  </div>
+</div>
+    
+      
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/blog/categories/#技术文章-ref">技术文章</a>	/
+    	<a href="/blog/tag/#-ref"></a>
+    
+  </div>
+</div>
+
+    
+
+    <div class="container docs-container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar hidden-print" role="complementary">
+        <div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2016">2016</a>
+          <ul class="nav">
+            <li><a href="#month_2016_December">December</a></li>
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2015">2015</a>
+            <ul class="nav">
+              <li><a href="#month_2015_November">November</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_September">September</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_August">August</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_June">June</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2014">2014</a>
+            <ul class="nav">
+              <li><a href="#month_2014_November">November</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_September">September</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_August">August</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_March">March</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2013">2013</a>
+            <ul class="nav">
+              <li><a href="#month_2013_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2013_November">November</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+      </div>
+    </div>
+    <div class="col-md-9" role="main">
+      <div class="panel docs-content">
+        <div class="wrapper">
+            <header class="post-header">
+              <h1 class="post-title">flume搭建日志收集系统</h1>
+              <!--
+                <p class="post-meta">Dec 1, 2016 • ebankie</p>
+              -->
+              <div class="meta">Posted on <span class="postdate">Dec 01, 2016</span> By <a target="_blank" href="http://localhost:4000">Ebankie</a></div>
+              <br />
+            </header>
+            <article class="post-content">
+              <p>闲话不说直接上配置文件及过程中注意的问题：</p>
+
+<p>现有两个主机其中一个A做agent1,agent2   B用来collect 日志，并且agent1 agent2统一收集到一个文件里。</p>
+
+<p>flume 配置相关及使用方法网上太多了，关注及学会以下三个组件的使用方法，就基本搞定</p>
+
+<ul>
+  <li>
+    <p>Source：用来消费传递到该组件的Event ##即收集日志的方式，可以文件，命令……</p>
+  </li>
+  <li>
+    <p>Channel：中转Event的一个临时存储，保存有Source组件传递过来的Event</p>
+  </li>
+  <li>
+    <p>Sink：从Channel中读取并移除Event，将Event传递到Flow Pipeline中的下一个修复处理服务，或者保存到文件</p>
+  </li>
+</ul>
+
+<p>一，配置agent</p>
+
+<p>我官网下载的源码版本为：</p>
+
+<p>apache-flume-1.7.0-bin.tar.gz</p>
+
+<p>agent1配置文件flume-agent.conf.properties 如下：</p>
+
+<p>[well]</p>
+
+<p>agent1.sources = source1
+agent1.sinks = sink1
+agent1.channels = channel1</p>
+
+<h1 id="describeconfigure-source1">Describe/configure source1</h1>
+
+<p>agent1.sources.source1.type = exec
+agent1.sources.source1.command = tail -f /data/logs/access-admin.log
+agent1.sources.source1.channels = channel1</p>
+<h1 id="describe-sink1">Describe sink1</h1>
+<h1 id="agent1sinkssink1type--file_roll">agent1.sinks.sink1.type = file_roll</h1>
+<h1 id="agent1sinkssink1sinkdirectoryhomedevbankiedata">agent1.sinks.sink1.sink.directory=/home/dev/bankie/data</h1>
+<p>#agent1.sinks.sink1.sink.rollInterval=0
+#
+agent1.sinks.sink1.channel = channel1
+agent1.sinks.sink1.type = avro
+agent1.sinks.sink1.hostname = 10.1.0.8 #B服务的IP
+agent1.sinks.sink1.port = 44444</p>
+
+<h1 id="use-a-channel-which-buffers-events-in-memory">Use a channel which buffers events in memory</h1>
+<p>agent1.channels.channel1.type = memory
+agent1.channels.channel1.capacity = 50000
+agent1.channels.channel1.transactionCapacity = 10000</p>
+
+<p>[/well]</p>
+
+<p>agent2配置文件flume-agent2.conf 如下：</p>
+
+<p>[well]</p>
+
+<p>agent2.sources = source1
+agent2.sinks = sink1
+agent2.channels = channel1</p>
+
+<h1 id="describeconfigure-source1-1">Describe/configure source1</h1>
+
+<p>agent2.sources.source1.type = exec
+agent2.sources.source1.command = tail -f /data/logs/access-web.log
+agent2.sources.source1.channels = channel1</p>
+<h1 id="describe-sink1-1">Describe sink1</h1>
+<h1 id="agent2sinkssink1type--file_roll">agent2.sinks.sink1.type = file_roll</h1>
+<h1 id="agent2sinkssink1sinkdirectoryhomedevbankiedata">agent2.sinks.sink1.sink.directory=/home/dev/bankie/data</h1>
+<p>#agent2.sinks.sink1.sink.rollInterval=0
+#
+agent2.sinks.sink1.channel = channel1
+agent2.sinks.sink1.type = avro
+agent2.sinks.sink1.hostname = 10.1.0.8 #B服务IP
+agent2.sinks.sink1.port = 44444</p>
+
+<h1 id="use-a-channel-which-buffers-events-in-memory-1">Use a channel which buffers events in memory</h1>
+<p>agent2.channels.channel1.type = memory
+agent2.channels.channel1.capacity = 50000
+agent2.channels.channel1.transactionCapacity = 10000</p>
+
+<p>[/well]</p>
+
+<p>配置文件为conf 或者properties 都可以，关键看起动flume指定的哪个类型</p>
+
+<p>###特别注意 配置agent2.sinks.sink1.hostname时，网上例子全是agent2.sinks.sink1.bind 1.70后是hostname</p>
+
+<p>起动命令：</p>
+
+<p>flume-ng agent -c /home/dev/flume/conf -f /home/dev/flume/conf/flume-agent2.conf -n agent2  -Dflume.root.logger=INFO,console</p>
+
+<p>flume-ng agent -c /home/dev/flume/conf -f /home/dev/flume/conf/flume-agent1.conf.properties  -n agent1  -Dflume.root.logger=INFO,console</p>
+
+<p>##flume-ng -n agent1 名字和配置文件一致，否则报错……，第一次配置以为可以自命名，走了弯路！！</p>
+
+<p>成功信息：</p>
+
+<p>2016-12-01 14:43:46,847 (lifecycleSupervisor-1-0) [WARN - org.apache.flume.api.NettyAvroRpcClient.configure(NettyAvroRpcClient.java:634)] Using default maxIOWorkers
+2016-12-01 14:43:47,133 (lifecycleSupervisor-1-0) [INFO - org.apache.flume.sink.AbstractRpcSink.start(AbstractRpcSink.java:301)] Rpc sink sink1 started.</p>
+
+<p>二、配置server收集端</p>
+
+<p>配置文件为：flume-server.conf</p>
+
+<p>[well]</p>
+
+<p>a1.sources = r1
+a1.sinks = k1
+a1.channels = c1</p>
+
+<p>a1.sources.r1.type = avro  #此处有多种收集方式，网上信息非常多，不再复述
+a1.sources.r1.channels = c1
+a1.sources.r1.bind = 0.0.0.0
+a1.sources.r1.port = 44444</p>
+<h1 id="use-a-channel-which-buffers-events-in-memory-2">Use a channel which buffers events in memory</h1>
+
+<p>a1.channels.c1.type = memory
+a1.channels.c1.capacity = 50000
+a1.channels.c1.transactionCapacity = 10000</p>
+
+<p>a1.sinks.k1.type = file_roll  ###此处也有多种发送处理，对接kafka,hdfs 都可以，本文集中收集到文件中
+a1.sinks.k1.sink.directory=/home/dev/bankie/data
+a1.sinks.k1.sink.rollInterval = 0 ##agent1,agent2合并一个文件里存储
+a1.sources.r1.channels = c1
+a1.sinks.k1.channel = c1</p>
+
+<p>[/well]</p>
+
+<p>起动命令：</p>
+
+<p>flume-ng agent -c /home/dev/flume/conf -f /home/dev/flume/conf/flume-server.conf -n a1  -Dflume.root.logger=INFO,console</p>
+
+<p>成功后可以看到有如下信息：</p>
+
+<p>Avro source r1 started.
+2016-12-01 14:49:54,575 (New I/O server boss #9) [INFO - org.apache.avro.ipc.NettyServer$NettyServerAvroHandler.handleUpstream(NettyServer.java:171)] [id: 0x8a07a7bc, /10.1.0.9:543 =&gt; /10.1.0.8:44444] OPEN
+2016-12-01 14:49:54,576 (New I/O worker #1) [INFO - org.apache.avro.ipc.NettyServer$NettyServerAvroHandler.handleUpstream(NettyServer.java:171)] [id: 0x8a07a7bc, /10.1.0.9:543 =&gt; /10.1.0.8:44444] BOUND: /10.1.0.8:44444
+2016-12-01 14:49:54,576 (New I/O worker #1) [INFO - org.apache.avro.ipc.NettyServer$NettyServerAvroHandler.handleUpstream(NettyServer.java:171)] [id: 0x8a07a7bc, /10.1.0.9:543 =&gt; /10.1.0.8:44444] CONNECTED: /10.1.0.9:54303</p>
+
+<p>以上有内网映射端口。看自己情况而定</p>
+
+<p>收集日志信息如下：</p>
+
+<p>com”</p>
+<ul>
+  <li>
+    <ul>
+      <li>[01/Dec/2016:14:51:50 +0800] “GET /admin/index/?a=5 HTTP/1.1 “Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/</li>
+    </ul>
+  </li>
+  <li>
+    <ul>
+      <li>[01/Dec/2016:14:52:44 +0800] “GET /web/user/ HTTP/1.1 “Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/”</li>
+    </ul>
+  </li>
+</ul>
+
+            </article>
+        </div>
+      </div>
+      <div class="panel docs-content">
+        <article class="post-content">
+          <div class="wrapper">
+            
+
+
+  <div class="ds-thread" data-thread-key="/2016/12/01/flume-e6-90-ad-e5-bb-ba-e6-97-a5-e5-bf-97-e6-94-b6-e9-9b-86-e7-b3-bb-e7-bb-9f/" data-title="flume搭建日志收集系统" data-url="http://localhost:4000/2016/12/01/flume-e6-90-ad-e5-bb-ba-e6-97-a5-e5-bf-97-e6-94-b6-e9-9b-86-e7-b3-bb-e7-bb-9f/"></div>
+
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"ebankie"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+</script>
+
+
+ 
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <footer class="footer" role="contentinfo">
+	<div class="container">
+		<p class="copyright">Copyright &copy; 2014-2016 <a href="http://ebankie.github.io/blog/"><code>Ebankie</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/blog/styles/js/jquery.min.js"></script>
+<script src="/blog/styles/js/bootstrap.min.js"></script>
+<script src="/blog/styles/js/holder.min.js"></script>
+<script src="/blog/styles/js/application.js"></script>
+<script src="/blog/styles/js/lessismore.js"></script>
+
+  </body>
+</html>

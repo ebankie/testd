@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>nginx缓存使用及原理</title>
+
+	<link rel="shortcut icon" href="/blog/styles/images/favicon.jpg">
+	<link rel="icon" href="/blog/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/blog/styles/css/index.css">
+	<link rel="stylesheet" href="/blog/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/blog/2016/02/22/nginx-e7-bc-93-e5-ad-98-e8-ae-be-e8-ae-a1-e5-8f-8a-e5-8e-9f-e7-90-86/">
+	<link rel="alternate" type="application/rss+xml" title="Ebankie Blog" href="/blog/feed.xml">
+	
+	<meta name="description" content="康志华;个人博客;学而不思则罔;思而不学则殆;生命不止;折腾不休">
+
+	<script src="/blog/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "//hm.baidu.com/hm.js?94be4b0f9fc5d94cc0d0415ea6761ae9";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+
+  <body class="index">
+
+    <header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">
+        <img src="/blog/styles/images/logo.jpg">
+      </a>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">    
+        <li>
+          <a href="/blog/">Home</a>
+        </li>
+        <li>
+          <a href="/blog/categories/">大类分解</a>
+        </li>
+        <li>
+          <a href="/blog/tag">小类内聚</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="/blog/donate/"><strong>打赏</strong></a>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a rel="nofollow" target="_blank" href="https://github.com/ebankie/">Github</a></li>
+            <li><a rel="nofollow" target="_blank" href="http://ebankie.github.io/blog/">关于作者</a></li>
+            <li><a rel="nofollow" href="/blog/books">我的书单</a></li>
+            <li><a rel="nofollow" href="/blog/reference">推荐博客</a></li>
+            <li><a href="/blog/feed.xml">RSS订阅</a></li>
+            <li class="divider"></li>
+            <li><a rel="nofollow" target="_blank" href="https://github.com/luoyan35714/LessOrMore.git">本项目</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+    <div class="docs-header" id="content">
+  <div class="container">
+  	
+  		<!--
+		    <h1>nginx缓存使用及原理</h1>
+		    <p>Post on Feb 22, 2016 by <a href="/about">Ebankie</a></p>
+		-->
+		    <h1>It's our wits that make us men.</h1>
+    
+  </div>
+</div>
+    
+      
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/blog/categories/#技术文章-ref">技术文章</a>	/
+    	<a href="/blog/tag/#-ref"></a>
+    
+  </div>
+</div>
+
+    
+
+    <div class="container docs-container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar hidden-print" role="complementary">
+        <div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2016">2016</a>
+          <ul class="nav">
+            <li><a href="#month_2016_December">December</a></li>
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2015">2015</a>
+            <ul class="nav">
+              <li><a href="#month_2015_November">November</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_September">September</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_August">August</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_June">June</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2014">2014</a>
+            <ul class="nav">
+              <li><a href="#month_2014_November">November</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_September">September</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_August">August</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_March">March</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2013">2013</a>
+            <ul class="nav">
+              <li><a href="#month_2013_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2013_November">November</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+      </div>
+    </div>
+    <div class="col-md-9" role="main">
+      <div class="panel docs-content">
+        <div class="wrapper">
+            <header class="post-header">
+              <h1 class="post-title">nginx缓存使用及原理</h1>
+              <!--
+                <p class="post-meta">Feb 22, 2016 • ebankie</p>
+              -->
+              <div class="meta">Posted on <span class="postdate">Feb 22, 2016</span> By <a target="_blank" href="http://localhost:4000">Ebankie</a></div>
+              <br />
+            </header>
+            <article class="post-content">
+              <p>这几天正好为公共账号写几篇技术文章，就整理一下nginx下的缓存，做web注重性能，webcache使用的好，会事半功倍。</p>
+
+<p>今天重点分析一下web服务器的缓存</p>
+
+<p>一、nginx分为两类缓存，第一类，控制客户端的本地缓存，第二类就是直接缓存地web服务器的文件缓存。</p>
+
+<p>1，expires 指令设置静态文件缓存即使用客户端本地缓存。expires可以控制 http 应答中的“Expires ”和“ Cache-Control ”的头标（起到控制页面缓存的作用）,所以在使用浏览器访问的时候，经常可以看到一个状态值304返回.</p>
+
+<p>最常见的静态文件的缓存,配置方式如下：</p>
+
+<p>[well]</p>
+
+<p>location~ .<em>.(gif|jpg|png|htm|html|css|js|flv|ico|swf)(.</em>) {
+expires 6h;
+}</p>
+
+<p>[/well]</p>
+
+<p>语法： expires [time|epoch|max|off]
+默认值： expires off
+作用域： http, server, location</p>
+
+<p>设置expires这个参数即可表示需要客户端缓存时间.如果不想让代理或浏览器缓存，加no-cache参数或private参数：</p>
+<h1 id="expires-1d">expires 1d;</h1>
+<p>add_header Cache-Control no-cache;
+add_header Cache-Control private;
+这样浏览器F5刷新时，返回的依然是200，而不是304.</p>
+
+<p>分析一下原理,expires使用了特定的时间，在第一次get请求时服务端会在header里返回Last-Modified响应头来确定最后一次修改时间，如果图所示。</p>
+
+<p><img src="http://img1.gtimg.com/yt/image/16/02/145611248923344.jpg" alt="" /></p>
+
+<p>当客户端第二次访问的时候，request会带有If-Modified-Since响应头来确定缓存时间是否过期，如下图，如果还在缓存时效内，客户端就不会下载缓存内容，服务会返回304，同理时间过了就会重新下载。</p>
+
+<p><img src="http://img1.gtimg.com/yt/image/16/02/145612083449342.jpg" alt="" /></p>
+
+<p>总结一下就是客户端使用If-Modified-Since头，和原始服务器中的Last-Modified制作比较，所以实现浏览器缓存并判断是否过期。
+简单的说，Last-Modified 与If-Modified-Since 都是用于记录页面最后修改时间的 HTTP 头信息，只是Last-Modified 是由服务器往客户端发送的 HTTP 头，而 If-Modified-Since则是由客户端往服务器发送的头，可以看到，再次请求本地存在的 cache 页面时，客户端会通过 If-Modified-Since头将先前服务器端发过来的 Last-Modified最后修改时间戳发送回去，这是为了让服务器端进行验证，通过这个时间戳判断客户端的页面是否是最新的，如果不是最新的，则返回新的内容，如果是最新的，则返回304告诉客户端其本地cache的页面是最新的，于是客户端就可以直接从本地加载页面了，这样在网络上传输的数据就会大大减少，同时也减轻了服务器的负担。</p>
+
+<p>2,nginx的proxy模块 可以实现类似于Squid的缓存功能，HTTP的缓存与文件系统或者块设备的缓存还有所不同，文件系统或者块设备的缓存可以使用预取方法做优化，提前预取出将要被访问的部分，但是HTTP的缓存却无法预知文件的访问情形。</p>
+
+<p>可以在nginx里面实现动态页面的静态化工作。
+具体的配置方法如下：
+在http域内添加如下参数</p>
+
+<p>[well]</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>proxy_temp_path /var/tmp/nginx/proxy;
+proxy_cache_path /var/tmp/nginx/cache levels=1:2 keys_zone=cache_one:20m inactive=1d max_size=5g;
+
+server {
+
+ listen  80;
+ server_name localhost;
+
+ root /var/www;
+
+ location ~ \.(jpg|png|jpeg|gif|css|js)$ {
+  proxy_cache cache_one;
+  proxy_cache_valid 200 304 12h;
+  proxy_cache_key $host$uri$is_args$args;
+  proxy_set_header Host $host;
+  proxy_set_header X-Forwarded-For $remote_addr;
+  proxy_pass http://127.0.0.1:8181;
+  proxy_set_header X-Forwarded_For $proxy_add_x_forwarded_for;
+  expires 1d;
+ }
+}
+</code></pre>
+</div>
+
+<p>[/well]</p>
+
+<p>语法解析：</p>
+
+<p>说明</p>
+
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">proxy_temp_path</code> ： 缓存临时目录。后端的响应并不直接返回客户端，而是先写到一个临时文件中，然后被rename一下当做缓存放在 proxy_cache_path 。0.8.9版本以后允许temp和cache两个目录在不同文件系统上（分区），然而为了减少性能损失还是建议把它们设成一个文件系统上。</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">proxy_cache_path ...</code> ： 设置缓存目录，目录里的文件名是 cache_key 的MD5值。
+<code class="highlighter-rouge">levels=1:2 keys_zone=cache_one:50m</code>表示采用2级目录结构，Web缓存区名称为cache_one，内存缓存空间大小为100MB，这个缓冲zone可以被多次使用。文件系统上看到的缓存文件名类似于 /usr/local/nginx-1.6/proxy_cache/c/29/b7f54b2df7773722d382f4809d65029c 。
+<code class="highlighter-rouge">inactive=2d max_size=2g</code>表示2天没有被访问的内容自动清除，硬盘最大缓存空间为2GB，超过这个大学将清除最近最少使用的数据。</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">proxy_cache</code> ： 引用前面定义的缓存区 cache_one</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">proxy_cache_key</code> ： 定义cache_key</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">proxy_cache_valid</code> ： 为不同的响应状态码设置不同的缓存时间，比如200、302等正常结果可以缓存的时间长点，而404、500等缓存时间设置短一些，这个时间到了文件就会过期，而不论是否刚被访问过。</p>
+  </li>
+</ul>
+
+<p>以上两种方式，修改请求url会导致有缓存失效，是因为nginx以请求url做hash为缓存key，只要更新请求url服务器认为是新的请求。</p>
+
+<p>文章总结：</p>
+
+<p>可以看到nginx两种缓存方式，各有所长，根据项目的具体情况联合使用。会对web性能有极大提高.</p>
+
+
+            </article>
+        </div>
+      </div>
+      <div class="panel docs-content">
+        <article class="post-content">
+          <div class="wrapper">
+            
+
+
+  <div class="ds-thread" data-thread-key="/2016/02/22/nginx-e7-bc-93-e5-ad-98-e8-ae-be-e8-ae-a1-e5-8f-8a-e5-8e-9f-e7-90-86/" data-title="nginx缓存使用及原理" data-url="http://localhost:4000/2016/02/22/nginx-e7-bc-93-e5-ad-98-e8-ae-be-e8-ae-a1-e5-8f-8a-e5-8e-9f-e7-90-86/"></div>
+
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"ebankie"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+</script>
+
+
+ 
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <footer class="footer" role="contentinfo">
+	<div class="container">
+		<p class="copyright">Copyright &copy; 2014-2016 <a href="http://ebankie.github.io/blog/"><code>Ebankie</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/blog/styles/js/jquery.min.js"></script>
+<script src="/blog/styles/js/bootstrap.min.js"></script>
+<script src="/blog/styles/js/holder.min.js"></script>
+<script src="/blog/styles/js/application.js"></script>
+<script src="/blog/styles/js/lessismore.js"></script>
+
+  </body>
+</html>

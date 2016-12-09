@@ -1,5 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xml" href="http://localhost:4000/blog/feed.xslt.xml"?><feed xmlns="http://www.w3.org/2005/Atom"><generator uri="http://jekyllrb.com" version="3.3.1">Jekyll</generator><link href="http://localhost:4000/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/blog/" rel="alternate" type="text/html" /><updated>2016-12-08T17:26:06+08:00</updated><id>http://localhost:4000/blog//</id><title type="html">Ebankie blog</title><subtitle>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
-</subtitle><entry><title type="html">Welcome to Jekyll!</title><link href="http://localhost:4000/blog/jekyll/update/2016/12/08/welcome-to-jekyll.html" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2016-12-08T15:17:53+08:00</published><updated>2016-12-08T15:17:53+08:00</updated><id>http://localhost:4000/blog/jekyll/update/2016/12/08/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/blog/jekyll/update/2016/12/08/welcome-to-jekyll.html">&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title></title>
+    <description>Actually, less is more!</description>
+    <link>http://localhost:4000/blog/</link>
+    <atom:link href="http://localhost:4000/blog/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Fri, 09 Dec 2016 11:07:09 +0800</pubDate>
+    <lastBuildDate>Fri, 09 Dec 2016 11:07:09 +0800</lastBuildDate>
+    <generator>Jekyll v3.3.1</generator>
+    
+      <item>
+        <title>Welcome to Jekyll!</title>
+        <description>&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
 
 &lt;p&gt;To add new posts, simply add a file in the &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code class=&quot;highlighter-rouge&quot;&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
 
@@ -11,7 +23,23 @@
 &lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Tom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints 'Hi, Tom' to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;Check out the &lt;a href=&quot;http://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;</content><summary type="html">You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.</summary></entry><entry><title type="html">flume搭建日志收集系统</title><link href="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2016/12/01/flume-e6-90-ad-e5-bb-ba-e6-97-a5-e5-bf-97-e6-94-b6-e9-9b-86-e7-b3-bb-e7-bb-9f.html" rel="alternate" type="text/html" title="flume搭建日志收集系统" /><published>2016-12-01T14:55:27+08:00</published><updated>2016-12-01T14:55:27+08:00</updated><id>http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2016/12/01/flume%E6%90%AD%E5%BB%BA%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86%E7%B3%BB%E7%BB%9F</id><content type="html" xml:base="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2016/12/01/flume-e6-90-ad-e5-bb-ba-e6-97-a5-e5-bf-97-e6-94-b6-e9-9b-86-e7-b3-bb-e7-bb-9f.html">&lt;p&gt;闲话不说直接上配置文件及过程中注意的问题：&lt;/p&gt;
+&lt;p&gt;Check out the &lt;a href=&quot;http://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 08 Dec 2016 15:17:53 +0800</pubDate>
+        <link>http://localhost:4000/blog/2016/12/08/welcome-to-jekyll/</link>
+        <guid isPermaLink="true">http://localhost:4000/blog/2016/12/08/welcome-to-jekyll/</guid>
+        
+        
+        <category>jekyll</category>
+        
+        <category>update</category>
+        
+      </item>
+    
+      <item>
+        <title>flume搭建日志收集系统</title>
+        <description>&lt;p&gt;闲话不说直接上配置文件及过程中注意的问题：&lt;/p&gt;
 
 &lt;p&gt;现有两个主机其中一个A做agent1,agent2   B用来collect 日志，并且agent1 agent2统一收集到一个文件里。&lt;/p&gt;
 
@@ -167,7 +195,20 @@ a1.sinks.k1.channel = c1&lt;/p&gt;
       &lt;li&gt;[01/Dec/2016:14:52:44 +0800] “GET /web/user/ HTTP/1.1 “Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/”&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-&lt;/ul&gt;</content><author><name>ebankie</name></author><summary type="html">闲话不说直接上配置文件及过程中注意的问题：</summary></entry><entry><title type="html">nginx缓存使用及原理</title><link href="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2016/02/22/nginx-e7-bc-93-e5-ad-98-e8-ae-be-e8-ae-a1-e5-8f-8a-e5-8e-9f-e7-90-86.html" rel="alternate" type="text/html" title="nginx缓存使用及原理" /><published>2016-02-22T14:06:31+08:00</published><updated>2016-02-22T14:06:31+08:00</updated><id>http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2016/02/22/nginx%E7%BC%93%E5%AD%98%E8%AE%BE%E8%AE%A1%E5%8F%8A%E5%8E%9F%E7%90%86</id><content type="html" xml:base="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2016/02/22/nginx-e7-bc-93-e5-ad-98-e8-ae-be-e8-ae-a1-e5-8f-8a-e5-8e-9f-e7-90-86.html">&lt;p&gt;这几天正好为公共账号写几篇技术文章，就整理一下nginx下的缓存，做web注重性能，webcache使用的好，会事半功倍。&lt;/p&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Thu, 01 Dec 2016 14:55:27 +0800</pubDate>
+        <link>http://localhost:4000/blog/2016/12/01/flume-e6-90-ad-e5-bb-ba-e6-97-a5-e5-bf-97-e6-94-b6-e9-9b-86-e7-b3-bb-e7-bb-9f/</link>
+        <guid isPermaLink="true">http://localhost:4000/blog/2016/12/01/flume-e6-90-ad-e5-bb-ba-e6-97-a5-e5-bf-97-e6-94-b6-e9-9b-86-e7-b3-bb-e7-bb-9f/</guid>
+        
+        
+        <category>技术文章</category>
+        
+      </item>
+    
+      <item>
+        <title>nginx缓存使用及原理</title>
+        <description>&lt;p&gt;这几天正好为公共账号写几篇技术文章，就整理一下nginx下的缓存，做web注重性能，webcache使用的好，会事半功倍。&lt;/p&gt;
 
 &lt;p&gt;今天重点分析一下web服务器的缓存&lt;/p&gt;
 
@@ -268,7 +309,21 @@ server {
 
 &lt;p&gt;文章总结：&lt;/p&gt;
 
-&lt;p&gt;可以看到nginx两种缓存方式，各有所长，根据项目的具体情况联合使用。会对web性能有极大提高.&lt;/p&gt;</content><author><name>ebankie</name></author><summary type="html">这几天正好为公共账号写几篇技术文章，就整理一下nginx下的缓存，做web注重性能，webcache使用的好，会事半功倍。</summary></entry><entry><title type="html">php正则表达式</title><link href="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2016/01/13/php-e6-ad-a3-e5-88-99-e8-a1-a8-e8-be-be-e5-bc-8f.html" rel="alternate" type="text/html" title="php正则表达式" /><published>2016-01-13T10:59:51+08:00</published><updated>2016-01-13T10:59:51+08:00</updated><id>http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2016/01/13/php%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F</id><content type="html" xml:base="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2016/01/13/php-e6-ad-a3-e5-88-99-e8-a1-a8-e8-be-be-e5-bc-8f.html">&lt;p&gt;经常使用,但是有些基本属性还的查找。今天记录一下，特别是模式匹配及修饰符这部分。网上内容也不多。&lt;/p&gt;
+&lt;p&gt;可以看到nginx两种缓存方式，各有所长，根据项目的具体情况联合使用。会对web性能有极大提高.&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 22 Feb 2016 14:06:31 +0800</pubDate>
+        <link>http://localhost:4000/blog/2016/02/22/nginx-e7-bc-93-e5-ad-98-e8-ae-be-e8-ae-a1-e5-8f-8a-e5-8e-9f-e7-90-86/</link>
+        <guid isPermaLink="true">http://localhost:4000/blog/2016/02/22/nginx-e7-bc-93-e5-ad-98-e8-ae-be-e8-ae-a1-e5-8f-8a-e5-8e-9f-e7-90-86/</guid>
+        
+        
+        <category>技术文章</category>
+        
+      </item>
+    
+      <item>
+        <title>php正则表达式</title>
+        <description>&lt;p&gt;经常使用,但是有些基本属性还的查找。今天记录一下，特别是模式匹配及修饰符这部分。网上内容也不多。&lt;/p&gt;
 
 &lt;p&gt;（转自：http://www.cnblogs.com/-run/articles/2371078.html）&lt;/p&gt;
 
@@ -1154,7 +1209,21 @@ _&lt;/p&gt;
 
 &lt;p&gt;preg_match(‘/&amp;lt;img\s+[^&amp;gt;]&lt;em&gt;?src=('|&quot;)(.&lt;/em&gt;?)\1[^&amp;gt;]&lt;em&gt;?&amp;gt;/’, $con[‘conn’], $matches);
 $con[‘conn’] = preg_replace(‘/(&amp;lt;img.+src=&quot;)(.&lt;/em&gt;?)(&quot;(jpg|gif|bmp|bnp|png)&quot;?.+&amp;gt;)/i’,”${1}”.$img.”${3}”,$con[‘co
-nn’]);&lt;/p&gt;</content><author><name>ebankie</name></author><summary type="html">经常使用,但是有些基本属性还的查找。今天记录一下，特别是模式匹配及修饰符这部分。网上内容也不多。</summary></entry><entry><title type="html">Golang channels 教程</title><link href="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/11/27/golang-channels-e6-95-99-e7-a8-8b.html" rel="alternate" type="text/html" title="Golang channels 教程" /><published>2015-11-27T14:26:13+08:00</published><updated>2015-11-27T14:26:13+08:00</updated><id>http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/11/27/golang-channels-%E6%95%99%E7%A8%8B</id><content type="html" xml:base="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/11/27/golang-channels-e6-95-99-e7-a8-8b.html">&lt;p&gt;转自：http://www.oschina.net/translate/golang-channels-tutorial&lt;/p&gt;
+nn’]);&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 13 Jan 2016 10:59:51 +0800</pubDate>
+        <link>http://localhost:4000/blog/2016/01/13/php-e6-ad-a3-e5-88-99-e8-a1-a8-e8-be-be-e5-bc-8f/</link>
+        <guid isPermaLink="true">http://localhost:4000/blog/2016/01/13/php-e6-ad-a3-e5-88-99-e8-a1-a8-e8-be-be-e5-bc-8f/</guid>
+        
+        
+        <category>技术文章</category>
+        
+      </item>
+    
+      <item>
+        <title>Golang channels 教程</title>
+        <description>&lt;p&gt;转自：http://www.oschina.net/translate/golang-channels-tutorial&lt;/p&gt;
 
 &lt;table&gt;
 &lt;tbody&gt;
@@ -4192,7 +4261,21 @@ channel是Go语言中颇为有趣的一个机制。但是在高效地使用它�
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
-&lt;/table&gt;</content><author><name>ebankie</name></author><summary type="html">转自：http://www.oschina.net/translate/golang-channels-tutorial</summary></entry><entry><title type="html">翻墙路由器的原理与实现</title><link href="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/11/19/e7-bf-bb-e5-a2-99-e8-b7-af-e7-94-b1-e5-99-a8-e7-9a-84-e5-8e-9f-e7-90-86-e4-b8-8e-e5-ae-9e-e7-8e-b0.html" rel="alternate" type="text/html" title="翻墙路由器的原理与实现" /><published>2015-11-19T10:47:08+08:00</published><updated>2015-11-19T10:47:08+08:00</updated><id>http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/11/19/%E7%BF%BB%E5%A2%99%E8%B7%AF%E7%94%B1%E5%99%A8%E7%9A%84%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0</id><content type="html" xml:base="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/11/19/e7-bf-bb-e5-a2-99-e8-b7-af-e7-94-b1-e5-99-a8-e7-9a-84-e5-8e-9f-e7-90-86-e4-b8-8e-e5-ae-9e-e7-8e-b0.html">&lt;p&gt;转自：http://drops.wooyun.org/papers/10177?123&amp;amp;from=timeline&amp;amp;isappinstalled=0&lt;/p&gt;
+&lt;/table&gt;
+
+</description>
+        <pubDate>Fri, 27 Nov 2015 14:26:13 +0800</pubDate>
+        <link>http://localhost:4000/blog/2015/11/27/golang-channels-e6-95-99-e7-a8-8b/</link>
+        <guid isPermaLink="true">http://localhost:4000/blog/2015/11/27/golang-channels-e6-95-99-e7-a8-8b/</guid>
+        
+        
+        <category>技术文章</category>
+        
+      </item>
+    
+      <item>
+        <title>翻墙路由器的原理与实现</title>
+        <description>&lt;p&gt;转自：http://drops.wooyun.org/papers/10177?123&amp;amp;from=timeline&amp;amp;isappinstalled=0&lt;/p&gt;
 
 &lt;p&gt;编辑备注:因无法联系到原作者以及文章原文声明放弃著作权以及领接权，因此进行转载，希望作者能够联系邮箱 drops@wooyun.org&lt;/p&gt;
 
@@ -7782,7 +7865,20 @@ tcpdump: listening on pppoe-wan, link-type LINUX_SLL (Linux cooked), capture siz
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;有一个小工具来实现单向代理: &lt;a href=&quot;https://github.com/fqrouter/fquni&quot;&gt;https://github.com/fqrouter/fquni&lt;/a&gt;&lt;/p&gt;</content><author><name>ebankie</name></author><summary type="html">转自：http://drops.wooyun.org/papers/10177?123&amp;amp;from=timeline&amp;amp;isappinstalled=0</summary></entry><entry><title type="html">分布式存储</title><link href="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/09/24/e5-88-86-e5-b8-83-e5-bc-8f-e5-ad-98-e5-82-a8.html" rel="alternate" type="text/html" title="分布式存储" /><published>2015-09-24T16:31:02+08:00</published><updated>2015-09-24T16:31:02+08:00</updated><id>http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/09/24/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8</id><content type="html" xml:base="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/09/24/e5-88-86-e5-b8-83-e5-bc-8f-e5-ad-98-e5-82-a8.html">&lt;p&gt;分布存储方案&lt;/p&gt;
+&lt;p&gt;有一个小工具来实现单向代理: &lt;a href=&quot;https://github.com/fqrouter/fquni&quot;&gt;https://github.com/fqrouter/fquni&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Thu, 19 Nov 2015 10:47:08 +0800</pubDate>
+        <link>http://localhost:4000/blog/2015/11/19/e7-bf-bb-e5-a2-99-e8-b7-af-e7-94-b1-e5-99-a8-e7-9a-84-e5-8e-9f-e7-90-86-e4-b8-8e-e5-ae-9e-e7-8e-b0/</link>
+        <guid isPermaLink="true">http://localhost:4000/blog/2015/11/19/e7-bf-bb-e5-a2-99-e8-b7-af-e7-94-b1-e5-99-a8-e7-9a-84-e5-8e-9f-e7-90-86-e4-b8-8e-e5-ae-9e-e7-8e-b0/</guid>
+        
+        
+        <category>技术文章</category>
+        
+      </item>
+    
+      <item>
+        <title>分布式存储</title>
+        <description>&lt;p&gt;分布存储方案&lt;/p&gt;
 
 &lt;p&gt;一.BitCask&lt;/p&gt;
 
@@ -7970,14 +8066,40 @@ merge操作，通过定期将所有older data file中的数据扫描一遍并生
 
 &lt;p&gt;三、ZooKeeper 名字服务做分布式服务器群组&lt;/p&gt;
 
-&lt;p&gt;记录&lt;/p&gt;</content><author><name>ebankie</name></author><summary type="html">分布存储方案</summary></entry><entry><title type="html">php json_decode返回NULL 特别是使用file_get_contents</title><link href="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/08/20/php-json_decode-e8-bf-94-e5-9b-9enull-e7-89-b9-e5-88-ab-e6-98-af-e4-bd-bf-e7-94-a8file_get_contents.html" rel="alternate" type="text/html" title="php json_decode返回NULL 特别是使用file_get_contents" /><published>2015-08-20T20:55:28+08:00</published><updated>2015-08-20T20:55:28+08:00</updated><id>http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/08/20/php-json_decode%E8%BF%94%E5%9B%9Enull-%E7%89%B9%E5%88%AB%E6%98%AF%E4%BD%BF%E7%94%A8file_get_contents</id><content type="html" xml:base="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/08/20/php-json_decode-e8-bf-94-e5-9b-9enull-e7-89-b9-e5-88-ab-e6-98-af-e4-bd-bf-e7-94-a8file_get_contents.html">&lt;p&gt;今天遇到了json_decode无法解析json的情况，很是头痛，查来查去原来 编码服务器可以正常解析，但是解码服务无法解析，等到把整个json字串 放到页面上查看元素突然发现json字串头部多了字串，考虑是BOM问题，然后在编码服务打印字串长度6617到了解码服务打印长度成了6620 还要多一点，因些断定是BOM引起的json_decode无法解析。&lt;/p&gt;
+&lt;p&gt;记录&lt;/p&gt;
+</description>
+        <pubDate>Thu, 24 Sep 2015 16:31:02 +0800</pubDate>
+        <link>http://localhost:4000/blog/2015/09/24/e5-88-86-e5-b8-83-e5-bc-8f-e5-ad-98-e5-82-a8/</link>
+        <guid isPermaLink="true">http://localhost:4000/blog/2015/09/24/e5-88-86-e5-b8-83-e5-bc-8f-e5-ad-98-e5-82-a8/</guid>
+        
+        
+        <category>技术文章</category>
+        
+      </item>
+    
+      <item>
+        <title>php json_decode返回NULL 特别是使用file_get_contents</title>
+        <description>&lt;p&gt;今天遇到了json_decode无法解析json的情况，很是头痛，查来查去原来 编码服务器可以正常解析，但是解码服务无法解析，等到把整个json字串 放到页面上查看元素突然发现json字串头部多了字串，考虑是BOM问题，然后在编码服务打印字串长度6617到了解码服务打印长度成了6620 还要多一点，因些断定是BOM引起的json_decode无法解析。&lt;/p&gt;
 
 &lt;p&gt;if(preg_match(‘/^\xEF\xBB\xBF/’,$receive_part))
 {
 $receive_part= substr($receive_part,3);
 }&lt;/p&gt;
 
-&lt;p&gt;去掉BOM 解析正常,原来形成应该是编码服务使用header(‘Content-Type:application/json; charset=utf-8’);转UTF－8时形成的BOM 。&lt;/p&gt;</content><author><name>ebankie</name></author><summary type="html">今天遇到了json_decode无法解析json的情况，很是头痛，查来查去原来 编码服务器可以正常解析，但是解码服务无法解析，等到把整个json字串 放到页面上查看元素突然发现json字串头部多了字串，考虑是BOM问题，然后在编码服务打印字串长度6617到了解码服务打印长度成了6620 还要多一点，因些断定是BOM引起的json_decode无法解析。</summary></entry><entry><title type="html">测试hhvm 与phpfpm性能</title><link href="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/06/12/e6-b5-8b-e8-af-95hhvm-e4-b8-8ephpfpm-e6-80-a7-e8-83-bd.html" rel="alternate" type="text/html" title="测试hhvm 与phpfpm性能" /><published>2015-06-12T16:01:23+08:00</published><updated>2015-06-12T16:01:23+08:00</updated><id>http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/06/12/%E6%B5%8B%E8%AF%95hhvm-%E4%B8%8Ephpfpm%E6%80%A7%E8%83%BD</id><content type="html" xml:base="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/06/12/e6-b5-8b-e8-af-95hhvm-e4-b8-8ephpfpm-e6-80-a7-e8-83-bd.html">&lt;p&gt;总是说hhvm性能很高亲测试数据如下：&lt;/p&gt;
+&lt;p&gt;去掉BOM 解析正常,原来形成应该是编码服务使用header(‘Content-Type:application/json; charset=utf-8’);转UTF－8时形成的BOM 。&lt;/p&gt;
+</description>
+        <pubDate>Thu, 20 Aug 2015 20:55:28 +0800</pubDate>
+        <link>http://localhost:4000/blog/2015/08/20/php-json_decode-e8-bf-94-e5-9b-9enull-e7-89-b9-e5-88-ab-e6-98-af-e4-bd-bf-e7-94-a8file_get_contents/</link>
+        <guid isPermaLink="true">http://localhost:4000/blog/2015/08/20/php-json_decode-e8-bf-94-e5-9b-9enull-e7-89-b9-e5-88-ab-e6-98-af-e4-bd-bf-e7-94-a8file_get_contents/</guid>
+        
+        
+        <category>技术文章</category>
+        
+      </item>
+    
+      <item>
+        <title>测试hhvm 与phpfpm性能</title>
+        <description>&lt;p&gt;总是说hhvm性能很高亲测试数据如下：&lt;/p&gt;
 
 &lt;p&gt;从cpu\mem\io 三个方面&lt;/p&gt;
 
@@ -8093,7 +8215,20 @@ load average: 0.12, 0.08, 0.03
 
 总体来看 hhvm性能是优于fpm的
 &lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;</content><author><name>ebankie</name></author><summary type="html">总是说hhvm性能很高亲测试数据如下：</summary></entry><entry><title type="html">mysql 配置优化</title><link href="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/05/13/mysql-e9-85-8d-e7-bd-ae-e4-bc-98-e5-8c-96.html" rel="alternate" type="text/html" title="mysql 配置优化" /><published>2015-05-13T15:52:15+08:00</published><updated>2015-05-13T15:52:15+08:00</updated><id>http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/05/13/mysql-%E9%85%8D%E7%BD%AE%E4%BC%98%E5%8C%96</id><content type="html" xml:base="http://localhost:4000/blog/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/2015/05/13/mysql-e9-85-8d-e7-bd-ae-e4-bc-98-e5-8c-96.html">&lt;p&gt;**感觉这篇文章比较靠谱 收藏，经常会说优化 ，基本从三个方面，配置优化、设计优化、使用优化。这个文章从配置 方面来说不错
+&lt;/div&gt;
+</description>
+        <pubDate>Fri, 12 Jun 2015 16:01:23 +0800</pubDate>
+        <link>http://localhost:4000/blog/2015/06/12/e6-b5-8b-e8-af-95hhvm-e4-b8-8ephpfpm-e6-80-a7-e8-83-bd/</link>
+        <guid isPermaLink="true">http://localhost:4000/blog/2015/06/12/e6-b5-8b-e8-af-95hhvm-e4-b8-8ephpfpm-e6-80-a7-e8-83-bd/</guid>
+        
+        
+        <category>技术文章</category>
+        
+      </item>
+    
+      <item>
+        <title>mysql 配置优化</title>
+        <description>&lt;p&gt;**感觉这篇文章比较靠谱 收藏，经常会说优化 ，基本从三个方面，配置优化、设计优化、使用优化。这个文章从配置 方面来说不错
 **&lt;/p&gt;
 
 &lt;p&gt;转自：http://www.itokit.com/2013/0412/74892.html&lt;/p&gt;
@@ -8331,5 +8466,20 @@ mysql&amp;gt; show global status like ‘com_select’;
 +—————+———–+
 计算表扫描率：
 表扫描率 ＝ Handler_read_rnd_next / Com_select
-如果表扫描率超过4000，说明进行了太多表扫描，很有可能索引没有建好，增加read_buffer_size值会有一些好处，但最好不要超过8MB。&lt;/p&gt;</content><author><name>ebankie</name></author><category term="mysql" /><category term="优化" /><summary type="html">**感觉这篇文章比较靠谱 收藏，经常会说优化 ，基本从三个方面，配置优化、设计优化、使用优化。这个文章从配置 方面来说不错
-**</summary></entry></feed>
+如果表扫描率超过4000，说明进行了太多表扫描，很有可能索引没有建好，增加read_buffer_size值会有一些好处，但最好不要超过8MB。&lt;/p&gt;
+</description>
+        <pubDate>Wed, 13 May 2015 15:52:15 +0800</pubDate>
+        <link>http://localhost:4000/blog/2015/05/13/mysql-e9-85-8d-e7-bd-ae-e4-bc-98-e5-8c-96/</link>
+        <guid isPermaLink="true">http://localhost:4000/blog/2015/05/13/mysql-e9-85-8d-e7-bd-ae-e4-bc-98-e5-8c-96/</guid>
+        
+        <category>mysql</category>
+        
+        <category>优化</category>
+        
+        
+        <category>技术文章</category>
+        
+      </item>
+    
+  </channel>
+</rss>

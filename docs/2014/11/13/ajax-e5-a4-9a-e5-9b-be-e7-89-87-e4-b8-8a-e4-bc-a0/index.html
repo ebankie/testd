@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>ajax 多图片上传</title>
+
+	<link rel="shortcut icon" href="/blog/styles/images/favicon.jpg">
+	<link rel="icon" href="/blog/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/blog/styles/css/index.css">
+	<link rel="stylesheet" href="/blog/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/blog/2014/11/13/ajax-e5-a4-9a-e5-9b-be-e7-89-87-e4-b8-8a-e4-bc-a0/">
+	<link rel="alternate" type="application/rss+xml" title="Ebankie Blog" href="/blog/feed.xml">
+	
+	<meta name="description" content="康志华;个人博客;学而不思则罔;思而不学则殆;生命不止;折腾不休">
+
+	<script src="/blog/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "//hm.baidu.com/hm.js?94be4b0f9fc5d94cc0d0415ea6761ae9";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+
+  <body class="index">
+
+    <header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">
+        <img src="/blog/styles/images/logo.jpg">
+      </a>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">    
+        <li>
+          <a href="/blog/">Home</a>
+        </li>
+        <li>
+          <a href="/blog/categories/">大类分解</a>
+        </li>
+        <li>
+          <a href="/blog/tag">小类内聚</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="/blog/donate/"><strong>打赏</strong></a>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a rel="nofollow" target="_blank" href="https://github.com/ebankie/">Github</a></li>
+            <li><a rel="nofollow" target="_blank" href="http://ebankie.github.io/blog/">关于作者</a></li>
+            <li><a rel="nofollow" href="/blog/books">我的书单</a></li>
+            <li><a rel="nofollow" href="/blog/reference">推荐博客</a></li>
+            <li><a href="/blog/feed.xml">RSS订阅</a></li>
+            <li class="divider"></li>
+            <li><a rel="nofollow" target="_blank" href="https://github.com/luoyan35714/LessOrMore.git">本项目</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+    <div class="docs-header" id="content">
+  <div class="container">
+  	
+  		<!--
+		    <h1>ajax 多图片上传</h1>
+		    <p>Post on Nov 13, 2014 by <a href="/about">Ebankie</a></p>
+		-->
+		    <h1>It's our wits that make us men.</h1>
+    
+  </div>
+</div>
+    
+      
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/blog/categories/#技术文章-ref">技术文章</a>	/
+    	<a href="/blog/tag/#-ref"></a>
+    
+  </div>
+</div>
+
+    
+
+    <div class="container docs-container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar hidden-print" role="complementary">
+        <div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2016">2016</a>
+          <ul class="nav">
+            <li><a href="#month_2016_December">December</a></li>
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2015">2015</a>
+            <ul class="nav">
+              <li><a href="#month_2015_November">November</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_September">September</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_August">August</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_June">June</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2014">2014</a>
+            <ul class="nav">
+              <li><a href="#month_2014_November">November</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_September">September</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_August">August</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_March">March</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2013">2013</a>
+            <ul class="nav">
+              <li><a href="#month_2013_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2013_November">November</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+      </div>
+    </div>
+    <div class="col-md-9" role="main">
+      <div class="panel docs-content">
+        <div class="wrapper">
+            <header class="post-header">
+              <h1 class="post-title">ajax 多图片上传</h1>
+              <!--
+                <p class="post-meta">Nov 13, 2014 • ebankie</p>
+              -->
+              <div class="meta">Posted on <span class="postdate">Nov 13, 2014</span> By <a target="_blank" href="http://localhost:4000">Ebankie</a></div>
+              <br />
+            </header>
+            <article class="post-content">
+              <p>图片上传一般是用form表单的，类型  enctype=”multipart/form-data”&gt;用ajax一般 两种方法一种是动态创建表单，提交到iframe里，然后进行处理 ，下面介绍另一种方式_
+_</p>
+
+<p>html 里必须要有type=”file”  的input 传输stream</p>
+
+<p>html代码如下：</p>
+
+<p>[well]</p>
+
+<div class="contentinner">
+<ul>
+<!--
+<li>
+<img src="../../images/cs.jpg" alt=""/>
+<em></em>
+</li>
+-->
+<li>
+<span class="b_addpic"></span>
+<input type="file" name="Filedata" multiple="multiple" id="Filedata" />
+
+</li>
+</ul>
+</div>
+
+<p>[/well]</p>
+
+<p>JS处理方式如下：</p>
+
+<p>//要注意的是ajax两个属性取值是</p>
+
+<p>processData:false,
+contentType : false,否则后台取不到 GET 或POST的数据</p>
+
+<p>[well]</p>
+
+<p>function upload(){</p>
+
+<p>var img= new FormData();
+var pic = $(“Filedata”);
+var fileObj= pic.get(0).files; //console.log(fileObj);
+img.append(“gimg”, fileObj[0]);</p>
+
+<p>$.ajax({
+url : ‘http://test.vogue.qq.com/Uploadpic/Upload/’,
+data : img,
+cache:false,
+processData:false,
+contentType : false,
+dataType : ‘json’,
+type : “POST”,
+success:function(data){
+var _getdata = data.url;
+var _htmlcon = “”;
+for(var i in _getdata){
+_htmlcon += ‘&lt;li&gt;’;
+_htmlcon += ‘<img src="'+_getdata[i]+'" alt="" /><em></em>’;
+_htmlcon += ‘&lt;/li&gt;’;
+}
+comment.numPic = _getdata.length + comment.numPic;
+if(comment.numPic &lt; 5){
+$(“.imgcontent”).find(“ul”).prepend(_htmlcon);
+if(comment.numPic == 4){
+$(“.imgcontent ul”).find(‘li:last-child’).hide();
+}
+comment.clickall();
+}else{
+alert(“最多只能传4张哟”);
+}
+}
+});</p>
+
+<p>}</p>
+
+<p>window.onload = function(){
+var input = document.getElementById(“Filedata”);
+var result= document.getElementById(“result”);
+var img_area = document.getElementById(“img_area”);
+if ( typeof(FileReader) === ‘undefined’ ){
+result.innerHTML = “抱歉，你的浏览器不支持 FileReader，请使用现代浏览器操作！”;
+input.setAttribute( ‘disabled’,’disabled’ );
+} else {
+input.addEventListener( ‘change’,readFile,false );
+}
+}
+function readFile(){
+var data = new FormData();
+for(var i = 0;i &lt; this.files.length;i++){
+data.append(“Filedata”+i,this.files[i])
+}
+upload(data);
+}</p>
+
+<p>[/well]</p>
+
+            </article>
+        </div>
+      </div>
+      <div class="panel docs-content">
+        <article class="post-content">
+          <div class="wrapper">
+            
+
+
+  <div class="ds-thread" data-thread-key="/2014/11/13/ajax-e5-a4-9a-e5-9b-be-e7-89-87-e4-b8-8a-e4-bc-a0/" data-title="ajax 多图片上传" data-url="http://localhost:4000/2014/11/13/ajax-e5-a4-9a-e5-9b-be-e7-89-87-e4-b8-8a-e4-bc-a0/"></div>
+
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"ebankie"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+</script>
+
+
+ 
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <footer class="footer" role="contentinfo">
+	<div class="container">
+		<p class="copyright">Copyright &copy; 2014-2016 <a href="http://ebankie.github.io/blog/"><code>Ebankie</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/blog/styles/js/jquery.min.js"></script>
+<script src="/blog/styles/js/bootstrap.min.js"></script>
+<script src="/blog/styles/js/holder.min.js"></script>
+<script src="/blog/styles/js/application.js"></script>
+<script src="/blog/styles/js/lessismore.js"></script>
+
+  </body>
+</html>

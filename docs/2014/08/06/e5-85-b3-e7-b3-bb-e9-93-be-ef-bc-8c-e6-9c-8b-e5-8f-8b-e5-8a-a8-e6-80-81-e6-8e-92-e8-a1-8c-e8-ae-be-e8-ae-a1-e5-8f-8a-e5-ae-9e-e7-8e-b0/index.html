@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>关系链，朋友动态排行设计及实现</title>
+
+	<link rel="shortcut icon" href="/blog/styles/images/favicon.jpg">
+	<link rel="icon" href="/blog/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/blog/styles/css/index.css">
+	<link rel="stylesheet" href="/blog/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/blog/2014/08/06/e5-85-b3-e7-b3-bb-e9-93-be-ef-bc-8c-e6-9c-8b-e5-8f-8b-e5-8a-a8-e6-80-81-e6-8e-92-e8-a1-8c-e8-ae-be-e8-ae-a1-e5-8f-8a-e5-ae-9e-e7-8e-b0/">
+	<link rel="alternate" type="application/rss+xml" title="Ebankie Blog" href="/blog/feed.xml">
+	
+	<meta name="description" content="康志华;个人博客;学而不思则罔;思而不学则殆;生命不止;折腾不休">
+
+	<script src="/blog/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "//hm.baidu.com/hm.js?94be4b0f9fc5d94cc0d0415ea6761ae9";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+
+  <body class="index">
+
+    <header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">
+        <img src="/blog/styles/images/logo.jpg">
+      </a>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">    
+        <li>
+          <a href="/blog/">Home</a>
+        </li>
+        <li>
+          <a href="/blog/categories/">大类分解</a>
+        </li>
+        <li>
+          <a href="/blog/tag">小类内聚</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="/blog/donate/"><strong>打赏</strong></a>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a rel="nofollow" target="_blank" href="https://github.com/ebankie/">Github</a></li>
+            <li><a rel="nofollow" target="_blank" href="http://ebankie.github.io/blog/">关于作者</a></li>
+            <li><a rel="nofollow" href="/blog/books">我的书单</a></li>
+            <li><a rel="nofollow" href="/blog/reference">推荐博客</a></li>
+            <li><a href="/blog/feed.xml">RSS订阅</a></li>
+            <li class="divider"></li>
+            <li><a rel="nofollow" target="_blank" href="https://github.com/luoyan35714/LessOrMore.git">本项目</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+    <div class="docs-header" id="content">
+  <div class="container">
+  	
+  		<!--
+		    <h1>关系链，朋友动态排行设计及实现</h1>
+		    <p>Post on Aug 06, 2014 by <a href="/about">Ebankie</a></p>
+		-->
+		    <h1>It's our wits that make us men.</h1>
+    
+  </div>
+</div>
+    
+      
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/blog/categories/#技术文章-ref">技术文章</a>	/
+    	<a href="/blog/tag/#-ref"></a>
+    
+  </div>
+</div>
+
+    
+
+    <div class="container docs-container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar hidden-print" role="complementary">
+        <div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2016">2016</a>
+          <ul class="nav">
+            <li><a href="#month_2016_December">December</a></li>
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2015">2015</a>
+            <ul class="nav">
+              <li><a href="#month_2015_November">November</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_September">September</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_August">August</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_June">June</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2014">2014</a>
+            <ul class="nav">
+              <li><a href="#month_2014_November">November</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_September">September</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_August">August</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_March">March</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2013">2013</a>
+            <ul class="nav">
+              <li><a href="#month_2013_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2013_November">November</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+      </div>
+    </div>
+    <div class="col-md-9" role="main">
+      <div class="panel docs-content">
+        <div class="wrapper">
+            <header class="post-header">
+              <h1 class="post-title">关系链，朋友动态排行设计及实现</h1>
+              <!--
+                <p class="post-meta">Aug 6, 2014 • ebankie</p>
+              -->
+              <div class="meta">Posted on <span class="postdate">Aug 06, 2014</span> By <a target="_blank" href="http://localhost:4000">Ebankie</a></div>
+              <br />
+            </header>
+            <article class="post-content">
+              <p>[well]</p>
+
+<p>近期业务出现很多关系链动态排名，加上自己曾经面试被问－－TOP排序问题被人鄙视一回，有时间研究了一下，并且在业务上应用支撑能力还算强大。</p>
+
+<p>[/well]</p>
+
+<h1 id="一第一类游戏业务关系链动态排名">一、第一类－游戏业务关系链动态排名</h1>
+
+<p>[well]</p>
+
+<p>1，游戏类业务对排名要求很高，但是对于服务的压力也大，一般通过异步完成即：设置积分和排名计算通过异步完成。</p>
+
+<p>2，我们的业务评估最大用户到亿级所以这个量还是压力山大的，常用的方法如：设计红黑树、分段计算处理等等，但是对于数据库压力还是大，并且数据量也很大，处理亿级对于mysql来说小牛拉大车了，经过评估计算最终选择redis 有序集来完成，内在计算处理还是很OK的，但是同样会面临大数据的问题，经过降级处理，只存储关键KEY及积分减小存储数据，把其他详细信息存储到其他服务，这样异步处理 很OK的。</p>
+
+<p>3，经过计算每个zadd 数据量几K，即使是到亿级的量也就10－20G存储量，所以redis容量可以评估出来了哈，对于用户详细信息，通过DB就可以搞定，一般用户关系排名不会有太多的，假设一个用户一共有３００个朋友，能同时在玩一个游戏的经验值最多1\2，一般不到1\3　所以几十条数据ＤＢ很轻松的。</p>
+
+<p>４，实施，设计好方案下一步就是勇敢的实现了，这个逻辑实现很快，大概二天不到，经过上线测试速度很快，一般７００ＭＳ左右</p>
+
+<p>５，注意问题，关系链数据大redis处理时间要考虑到，排名逻辑是　更新自己　－　更新好友关系链　－　输出结果　其中第二步的时候，考虑是否要用异步。我这里使用实时更新，没用异步。</p>
+
+<p>６，通过线上运营发现，数据到百万没有任何问题，到千万级也只是代理有连接报警，排名逻辑很平稳。</p>
+
+<p>[/well]</p>
+
+<h1 id="二第二类top排名">二、第二类－TOP排名</h1>
+
+<p>[well]</p>
+
+<p>这类排名相对简单一些，不再过多说，直接上一段代码，可以直接ＤＢ解决，我们的业务使用的是cache ，实现整个逻辑的时候发现一个好玩的array方法array_multisor，</p>
+
+<p><strong>array_multisort()</strong>可以用来一次对多个数组进行排序，或者根据某一维或多维对多维数组进行排序。</p>
+
+<p>关联（string）键名保持不变，但数字键名会被重新索引。</p>
+
+<p>输入数组被当成一个表的列并以行来排序——这类似于 SQL 的 ORDER BY 子句的功能。第一个数组是要排序的主要数组。数组中的行（值）比较为相同的话就按照下一个输入数组中相应值的大小来排序，依此类推。</p>
+
+<p>/**
+*排序方法使用自带函数
+*@param $arr 排序数组
+*return $arr 排序完毕
+**/
+public function wsort($arr){
+foreach($arr as $k=&gt;$v){
+$namea[$k] = $v[‘time’];
+$scoa[$k] = $v[‘score’];
+}
+array_multisort($scoa,SORT_DESC ,$namea,SORT_DESC ,$arr);
+return $arr;
+}</p>
+
+<p>[/well]</p>
+
+
+            </article>
+        </div>
+      </div>
+      <div class="panel docs-content">
+        <article class="post-content">
+          <div class="wrapper">
+            
+
+
+  <div class="ds-thread" data-thread-key="/2014/08/06/e5-85-b3-e7-b3-bb-e9-93-be-ef-bc-8c-e6-9c-8b-e5-8f-8b-e5-8a-a8-e6-80-81-e6-8e-92-e8-a1-8c-e8-ae-be-e8-ae-a1-e5-8f-8a-e5-ae-9e-e7-8e-b0/" data-title="关系链，朋友动态排行设计及实现" data-url="http://localhost:4000/2014/08/06/e5-85-b3-e7-b3-bb-e9-93-be-ef-bc-8c-e6-9c-8b-e5-8f-8b-e5-8a-a8-e6-80-81-e6-8e-92-e8-a1-8c-e8-ae-be-e8-ae-a1-e5-8f-8a-e5-ae-9e-e7-8e-b0/"></div>
+
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"ebankie"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+</script>
+
+
+ 
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <footer class="footer" role="contentinfo">
+	<div class="container">
+		<p class="copyright">Copyright &copy; 2014-2016 <a href="http://ebankie.github.io/blog/"><code>Ebankie</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/blog/styles/js/jquery.min.js"></script>
+<script src="/blog/styles/js/bootstrap.min.js"></script>
+<script src="/blog/styles/js/holder.min.js"></script>
+<script src="/blog/styles/js/application.js"></script>
+<script src="/blog/styles/js/lessismore.js"></script>
+
+  </body>
+</html>

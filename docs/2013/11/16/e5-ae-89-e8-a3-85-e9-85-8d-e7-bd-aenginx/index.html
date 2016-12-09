@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>安装配置nginx +php-fpm</title>
+
+	<link rel="shortcut icon" href="/blog/styles/images/favicon.jpg">
+	<link rel="icon" href="/blog/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/blog/styles/css/index.css">
+	<link rel="stylesheet" href="/blog/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/blog/2013/11/16/e5-ae-89-e8-a3-85-e9-85-8d-e7-bd-aenginx/">
+	<link rel="alternate" type="application/rss+xml" title="Ebankie Blog" href="/blog/feed.xml">
+	
+	<meta name="description" content="康志华;个人博客;学而不思则罔;思而不学则殆;生命不止;折腾不休">
+
+	<script src="/blog/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "//hm.baidu.com/hm.js?94be4b0f9fc5d94cc0d0415ea6761ae9";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+
+  <body class="index">
+
+    <header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">
+        <img src="/blog/styles/images/logo.jpg">
+      </a>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">    
+        <li>
+          <a href="/blog/">Home</a>
+        </li>
+        <li>
+          <a href="/blog/categories/">大类分解</a>
+        </li>
+        <li>
+          <a href="/blog/tag">小类内聚</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="/blog/donate/"><strong>打赏</strong></a>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a rel="nofollow" target="_blank" href="https://github.com/ebankie/">Github</a></li>
+            <li><a rel="nofollow" target="_blank" href="http://ebankie.github.io/blog/">关于作者</a></li>
+            <li><a rel="nofollow" href="/blog/books">我的书单</a></li>
+            <li><a rel="nofollow" href="/blog/reference">推荐博客</a></li>
+            <li><a href="/blog/feed.xml">RSS订阅</a></li>
+            <li class="divider"></li>
+            <li><a rel="nofollow" target="_blank" href="https://github.com/luoyan35714/LessOrMore.git">本项目</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+    <div class="docs-header" id="content">
+  <div class="container">
+  	
+  		<!--
+		    <h1>安装配置nginx +php-fpm</h1>
+		    <p>Post on Nov 16, 2013 by <a href="/about">Ebankie</a></p>
+		-->
+		    <h1>It's our wits that make us men.</h1>
+    
+  </div>
+</div>
+    
+      
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/blog/categories/#技术文章-ref">技术文章</a>	/
+    	<a href="/blog/tag/#-ref"></a>
+    
+  </div>
+</div>
+
+    
+
+    <div class="container docs-container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar hidden-print" role="complementary">
+        <div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2016">2016</a>
+          <ul class="nav">
+            <li><a href="#month_2016_December">December</a></li>
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2016_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2015">2015</a>
+            <ul class="nav">
+              <li><a href="#month_2015_November">November</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_September">September</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_August">August</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_June">June</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2015_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2014">2014</a>
+            <ul class="nav">
+              <li><a href="#month_2014_November">November</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_September">September</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_August">August</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_March">March</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2014_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2013">2013</a>
+            <ul class="nav">
+              <li><a href="#month_2013_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2013_November">November</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+      </div>
+    </div>
+    <div class="col-md-9" role="main">
+      <div class="panel docs-content">
+        <div class="wrapper">
+            <header class="post-header">
+              <h1 class="post-title">安装配置nginx +php-fpm</h1>
+              <!--
+                <p class="post-meta">Nov 16, 2013 • ebankie</p>
+              -->
+              <div class="meta">Posted on <span class="postdate">Nov 16, 2013</span> By <a target="_blank" href="http://localhost:4000">Ebankie</a></div>
+              <br />
+            </header>
+            <article class="post-content">
+              <ol>
+  <li>
+
+    <p>nginx安装成功
+突然想研究一下，nginx+php的工作方式，搞近一天时间，终于可以运行了，记录下来，
+参考：1，http://blog.163.com/koumm@126/blog/static/9540383720096307529267/
+      2，http://www.inginx.com/nginx-manual-download/
+      3,http://wiki.nginx.org/NginxChs</p>
+
+    <p>系统：ubuntu /php5.3.18/nginx 1.0.15
+首先安装:nginx
+安装gcc/prce/
+  apt-get install gcc
+  apt-get install pcre-dev</p>
+
+    <p>apt-get install libpcre3-dev
+   ./configure –profix=/usr/local/nginx</p>
+
+    <p>make</p>
+
+    <p>make install</p>
+
+    <p>2，安装php
+cd /home/datasoft/php-5.3.18/
+  380  ls</p>
+
+    <p>383  ./configure –prefix=/usr/local/php5 –with-config-file-path=/usr/local/php/etc
+–enable-fastcgi //关键的两行
+–enable-fpm // fpm管理器
+–enable-force-cgi-redirect
+  384  make
+  385  make install</p>
+
+    <p>注：如果安装php， make   时 有xxx.lo错误时用,make clean之后安装成功。 如果编译环境相同的机器直接COPY就可以然后</p>
+
+    <p>echo ‘/usr/local/php/lib’ »/etc/ld.so.conf;ldconfig 就OK了
+问题2，php 解析不了，访问时下载，nginx.conf   默认loction配置问题
+建立fpm运行用户
+groupadd nobody;
+useradd nobody nobody;
+起运fpm
+/usr/local/php5/sbin/php-fpm 
+查看是否起动成功
+netstat -npl | grep 9000
+root@ubuntu:/# netstat -npl | grep 9000
+tcp        0      0 127.0.0.1:9000          0.0.0.0:*               LISTEN      907/php-fpm.conf)
+起动成功</p>
+
+    <p>配置nginx.conf</p>
+
+    <p>user  nobody;
+worker_processes  1;</p>
+
+    <p>#error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;</p>
+
+    <p>pid        logs/nginx.pid;#打开这里，kill -HUP <code class="highlighter-rouge">cat /usr/local/nginx/logs/nginx.pid</code>使用</p>
+
+    <p>events {
+        use epoll; #以epoll的工作方式
+    worker_connections  1024;
+}</p>
+
+    <p>http {
+    include       mime.types;
+    default_type  application/octet-stream;</p>
+
+    <div class="highlighter-rouge"><pre class="highlight"><code>#log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+#                  '$status $body_bytes_sent "$http_referer" '
+#                  '"$http_user_agent" "$http_x_forwarded_for"';
+
+#access_log  logs/access.log  main;
+
+sendfile        on;
+#tcp_nopush     on;
+
+#keepalive_timeout  0;
+keepalive_timeout  65;
+
+#gzip  on; server { 
+    listen       80; 
+    server_name  localhost; 
+
+    #charset koi8-r; 
+
+    #access_log  logs/host.access.log  main; 
+
+   # location / {    //一定要注掉这部分，否则会不解析PHP文件，而会下载 了 
+    #    root   html; 
+    #    index  index.html index.htm; 
+    #} 
+
+    #error_page  404              /404.html;
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   html;
+    }
+
+    # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+    #
+    #location ~ \.php$ {
+    #    proxy_pass   http://127.0.0.1;
+    #}
+
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #开启以下部分以便nginx以fastcgi解析php
+    location ~ \.php$ {
+        root           /usr/local/nginx/html;
+        fastcgi_pass   127.0.0.1:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+
+    # deny access to .htaccess files, if Apache's document root
+    # concurs with nginx's one
+    #
+    #location ~ /\.ht {
+    #    deny  all;
+    #}
+}
+</code></pre>
+    </div>
+
+    <p>重起nginx
+kill -HUP <code class="highlighter-rouge">cat /usr/local/nginx/logs/nginx.pid</code>
+或者 nginx -t查看nginx.conf是否配置有错误
+在IE或者其他浏览器查看，配置成功！
+备份一个有用的linux管理工具：webmin</p>
+  </li>
+  <li>
+    <p>附vhost配置文件一份</p>
+  </li>
+  <li>[well]                                                                                                                                                                                                                                              nginx.confuser nobody;
+worker_processes 8;
+worker_cpu_affinity 00000001 00000010 00000100 00001000 00010000 00100000 01000000 10000000;
+worker_rlimit_nofile 65536;error_log /dev/null;
+#error_log logs/error.log debug;</li>
+</ol>
+
+<p>events {
+use epoll;
+worker_connections 65536;
+}
+http {
+include mime.types;
+default_type application/octet-stream;</p>
+
+<p>sendfile on;</p>
+
+<p>keepalive_timeout 30;</p>
+
+<p>log_format access ‘$host $remote_addr $upstream_addr $upstream_status [$time_local] “$request” ‘
+‘$status $body_bytes_sent $request_time “$http_referer” “$http_user_agent”’;</p>
+
+<p>access_log logs/access.log access;</p>
+
+<p>client_body_buffer_size 512k;</p>
+
+<p>proxy_connect_timeout 15;
+proxy_read_timeout 60;
+proxy_send_timeout 15;
+proxy_buffer_size 16k;
+proxy_buffers 4 64k;
+proxy_busy_buffers_size 128k;
+proxy_temp_file_write_size 128k;</p>
+
+<p>ssi on;
+ssi_silent_errors on;
+ssi_types text/xml;</p>
+
+<h1 id="gzip-on">gzip on;</h1>
+<h1 id="gzip_min_length-1k">gzip_min_length 1k;</h1>
+<h1 id="gzip_buffers-4-16k">gzip_buffers 4 16k;</h1>
+
+<p>include vhosts/*.conf;     [/well]      [well]                                                                                                                                                                                                                                     server {
+listen 80;
+server_name xx.ebankie.com;</p>
+
+<p>root /data/shipei/;
+index index.htm;</p>
+
+<p>location ~ .php {
+fastcgi_pass unix:/dev/shm/php-cgi.sock;
+fastcgi_index index.php;
+fastcgi_buffer_size 32k;
+fastcgi_buffers 8 32k;</p>
+
+<p>include fastcgi.conf;
+}</p>
+
+<p>location ^~ /a/ {
+rewrite ^/a/([^/]+)/? /index.php?site=$1 last;
+rewrite ^/a/([^/]+)/? /index.php?site=$1 last;
+}</p>
+
+<p>}[/well]</p>
+
+
+            </article>
+        </div>
+      </div>
+      <div class="panel docs-content">
+        <article class="post-content">
+          <div class="wrapper">
+            
+
+
+  <div class="ds-thread" data-thread-key="/2013/11/16/e5-ae-89-e8-a3-85-e9-85-8d-e7-bd-aenginx/" data-title="安装配置nginx +php-fpm" data-url="http://localhost:4000/2013/11/16/e5-ae-89-e8-a3-85-e9-85-8d-e7-bd-aenginx/"></div>
+
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"ebankie"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+</script>
+
+
+ 
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <footer class="footer" role="contentinfo">
+	<div class="container">
+		<p class="copyright">Copyright &copy; 2014-2016 <a href="http://ebankie.github.io/blog/"><code>Ebankie</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/blog/styles/js/jquery.min.js"></script>
+<script src="/blog/styles/js/bootstrap.min.js"></script>
+<script src="/blog/styles/js/holder.min.js"></script>
+<script src="/blog/styles/js/application.js"></script>
+<script src="/blog/styles/js/lessismore.js"></script>
+
+  </body>
+</html>
