@@ -42,7 +42,8 @@ figure > img {
   display: block; }
 
 figcaption {
-  font-size: 14px; }
+  font-size: 14px; 
+}
 
 /**
  * Lists
